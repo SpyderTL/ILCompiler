@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Compiler": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../HelloWorld/bin/debug/netcoreapp3.1/HelloWorld.dll\""
+    }
+  }
+}
