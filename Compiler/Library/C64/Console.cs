@@ -93,13 +93,24 @@ namespace ILCompiler.Library.C64
 			Cpu.OrAWithZeroPage(value + 2);
 			Cpu.OrAWithZeroPage(value + 3);
 
-			Cpu.IfNotZero(name + "FindFirstDigit");
+			Cpu.IfNotZero(name + "CheckForNegative");
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			Cpu.Jump(name + "Done");
+
+			// Check For Negative
+			Compiler.Label(name + "CheckForNegative");
+
+			Cpu.CopyZeroPageToA(value + 3);
+
+			Cpu.IfNotNegative(name + "FindFirstDigit");
+
+			Cpu.A = Petscii.GetBytes("-")[0];
+
+			Cpu.Call(Kernal.WriteCharacter);
 
 			// Skip Zero Digits
 			Compiler.Label(name + "FindFirstDigit");
@@ -300,13 +311,24 @@ namespace ILCompiler.Library.C64
 			Cpu.OrAWithZeroPage(value + 2);
 			Cpu.OrAWithZeroPage(value + 3);
 
-			Cpu.IfNotZero(name + "FindFirstDigit");
+			Cpu.IfNotZero(name + "CheckForNegative");
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			Cpu.Jump(name + "Done");
+
+			// Check For Negative
+			Compiler.Label(name + "CheckForNegative");
+
+			Cpu.CopyZeroPageToA(value + 3);
+
+			Cpu.IfNotNegative(name + "FindFirstDigit");
+
+			Cpu.A = Petscii.GetBytes("-")[0];
+
+			Cpu.Call(Kernal.WriteCharacter);
 
 			// Skip Zero Digits
 			Compiler.Label(name + "FindFirstDigit");

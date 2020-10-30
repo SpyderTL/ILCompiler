@@ -92,6 +92,12 @@ namespace ILCompiler.Platform.C64
 			Compiler.Writer.Write((byte)zeroPage);
 		}
 
+		internal static void IfNotNegative(string label)
+		{
+			Compiler.Writer.Write((byte)OpCodes.BranchToRelative8IfNotNegative);
+			Compiler.RelativeReference(label);
+		}
+
 		internal static void CopyXToStackPointer()
 		{
 			Compiler.Writer.Write((byte)OpCodes.CopyXToStackPointer);
@@ -111,7 +117,8 @@ namespace ILCompiler.Platform.C64
 
 		internal static void Call(string label)
 		{
-			Compiler.Imports.Add(label);
+			if(!Compiler.Imports.Contains(label))
+				Compiler.Imports.Add(label);
 
 			Compiler.Writer.Write((byte)OpCodes.CallImmediate16);
 			Compiler.AbsoluteReference(label);

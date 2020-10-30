@@ -63,6 +63,19 @@ namespace ILCompiler
 								case Mono.Cecil.Cil.Code.Nop:
 									break;
 
+								case Mono.Cecil.Cil.Code.Ldc_I4:
+									var intValue = (int)instruction.Operand;
+
+									Cpu.A = (intValue >> 24) & 0xff;
+									Stack.PushA();
+									Cpu.A = (intValue >> 16) & 0xff;
+									Stack.PushA();
+									Cpu.A = (intValue >> 8) & 0xff;
+									Stack.PushA();
+									Cpu.A = (intValue >> 0) & 0xff;
+									Stack.PushA();
+									break;
+
 								case Mono.Cecil.Cil.Code.Ldc_I4_0:
 									Cpu.A = 0x00;
 									Stack.PushA();
@@ -302,19 +315,19 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldstr:
-									var value = instruction.Operand as string;
+									var stringValue = instruction.Operand as string;
 
 									Cpu.CopyAbsoluteToX(Stack.Pointer);
 
 									Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-									Compiler.StringHighReference(value);
+									Compiler.StringHighReference(stringValue);
 
 									Cpu.DecrementX();
 
 									Cpu.CopyAToAbsolutePlusX(Stack.Address);
 
 									Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-									Compiler.StringLowReference(value);
+									Compiler.StringLowReference(stringValue);
 
 									Cpu.DecrementX();
 

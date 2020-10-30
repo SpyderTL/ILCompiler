@@ -24,7 +24,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x0E
 		// 0x0F
 
-		// 0x10
+		BranchToRelative8IfNotNegative = 0x10,
 		// 0x11
 		// 0x12
 		// 0x13

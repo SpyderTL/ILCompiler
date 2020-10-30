@@ -6,12 +6,11 @@ namespace HelloWorld
 	{
 		static void Main()
 		{
-			var a = 0;
-
 			while (true)
 			{
-				Console.Write(a++);
-				Console.Write(" ");
+				Console.WriteLine(int.MinValue);
+				Console.WriteLine(0);
+				Console.WriteLine(int.MaxValue);
 			}
 		}
 	}
