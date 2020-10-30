@@ -16,6 +16,7 @@ namespace ILCompiler
 		internal static Dictionary<long, string> HighReferences = new Dictionary<long, string>();
 		internal static Dictionary<long, string> RelativeReferences = new Dictionary<long, string>();
 
+		internal static List<string> Imports = new List<string>();
 		internal static List<string> Strings = new List<string>();
 		internal static int BaseAddress;
 
@@ -30,6 +31,7 @@ namespace ILCompiler
 			HighReferences.Clear();
 			RelativeReferences.Clear();
 			Strings.Clear();
+			Imports.Clear();
 		}
 
 		internal static void Label(string name)

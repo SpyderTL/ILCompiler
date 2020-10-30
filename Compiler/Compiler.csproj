@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ILCompiler</AssemblyName>
+    <RootNamespace>ILCompiler</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

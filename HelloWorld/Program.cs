@@ -6,8 +6,12 @@ namespace HelloWorld
 	{
 		static void Main()
 		{
-			Console.WriteLine("HELLO, .NET WORLD!");
-			Console.WriteLine("THIS IS TRULY CROSS PLATFORM!");
+			var a = 0;
+
+			while (true)
+			{
+				Console.WriteLine(a++);
+			}
 		}
 	}
 }

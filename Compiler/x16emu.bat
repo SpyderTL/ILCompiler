@@ -1,0 +1,1 @@
+"C:\Users\joshu\Desktop\x16emu_win-r37\x16emu.exe" -run -prg "C:\users\joshu\source\repos\OZone3\OZone\HelloWorld\bin\debug\netcoreapp3.1\HelloWorld.prg"

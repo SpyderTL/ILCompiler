@@ -1,0 +1,1 @@
+"C:\Games\Commodore 64\WinVICE-3.1-x64\x64" "C:\Users\joshu\source\repos\OZone3\OZone\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.prg"
