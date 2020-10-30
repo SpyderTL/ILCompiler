@@ -168,7 +168,7 @@ namespace ILCompiler.Platform.Mos6502
 		CopyXToImmediate16Address = 0x8E,
 		// 0x8F
 
-		// 0x90
+		BranchToRelative8IfNotCarry = 0x90,
 		CopyAToImmediate8PointerAddressPlusY = 0x91,
 		// 0x92
 		// 0x93
@@ -227,8 +227,8 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xC2
 		// 0xC3
 		// 0xC4
-		// 0xC5
-		// 0xC6
+		CompareAToImmediate8Address = 0xC5,
+		DecrementImmediate8Address = 0xC6,
 		// 0xC7
 
 		IncrementY = 0xC8,
@@ -263,7 +263,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xE2
 		// 0xE3
 		// 0xE4
-		// 0xE5
+		SubtractImmediate8AddressPlusCarryFromA = 0xE5,
 		IncrementImmediate8Address = 0xE6,
 		// 0xE7
 

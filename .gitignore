@@ -338,5 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/WinVICE2.bat
-/x16emu2.bat
+
+/x16emu.bat
+/WinVICE.bat

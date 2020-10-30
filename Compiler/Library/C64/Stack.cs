@@ -61,7 +61,7 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
-		internal static void PullZeroPage32(byte zeroPage)
+		internal static void PullZeroPage32(int zeroPage)
 		{
 			Cpu.CopyAbsoluteToX(Pointer);
 
@@ -71,15 +71,15 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CopyAbsolutePlusXToA(Address);
 			Cpu.IncrementX();
-			Cpu.CopyAToZeroPage((byte)(zeroPage + 1));
+			Cpu.CopyAToZeroPage(zeroPage + 1);
 
 			Cpu.CopyAbsolutePlusXToA(Address);
 			Cpu.IncrementX();
-			Cpu.CopyAToZeroPage((byte)(zeroPage + 2));
+			Cpu.CopyAToZeroPage(zeroPage + 2);
 
 			Cpu.CopyAbsolutePlusXToA(Address);
 			Cpu.IncrementX();
-			Cpu.CopyAToZeroPage((byte)(zeroPage + 3));
+			Cpu.CopyAToZeroPage(zeroPage + 3);
 
 			Cpu.CopyXToAbsolute(Pointer);
 		}

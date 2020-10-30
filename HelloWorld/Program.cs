@@ -10,7 +10,8 @@ namespace HelloWorld
 
 			while (true)
 			{
-				Console.WriteLine(a++);
+				Console.Write(a++);
+				Console.Write(" ");
 			}
 		}
 	}
