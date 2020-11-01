@@ -128,7 +128,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x6A
 		// 0x6B
 		// 0x6C
-		// 0x6D
+		AddImmediate16AddressPlusCarryToA = 0x6D,
 		// 0x6E
 		// 0x6F
 
@@ -159,12 +159,12 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x86
 		// 0x87
 
-		// 0x88
+		DecrementY = 0x88,
 		// 0x89
 		CopyXToA = 0x8A,
 		// 0x8B
-		// 0x8C
-		// 0x8D
+		CopyYToImmediate16Address = 0x8C,
+		CopyAToImmediate16Address = 0x8D,
 		CopyXToImmediate16Address = 0x8E,
 		// 0x8F
 
@@ -177,7 +177,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x96
 		// 0x97
 
-		// 0x98
+		CopyYToA = 0x98,
 		CopyAToImmediate16PlusYAddress = 0x99,
 		CopyXToStackPointer = 0x9A,
 		// 0x9B
@@ -190,17 +190,17 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xA1
 		CopyImmediate8ToX = 0xA2,
 		// 0xA3
-		// 0xA4
+		CopyImmediate8AddressToY = 0xA4,
 		CopyImmediate8AddressToA = 0xA5,
-		// 0xA6
+		CopyImmediate8AddressToX = 0xA6,
 		// 0xA7
 
 		CopyAToY = 0xA8,
 		CopyImmediate8ToA = 0xA9,
 		CopyAToX = 0xAA,
 		// 0xAB
-		// 0xAC
-		// 0xAD
+		CopyImmediate16AddressToY = 0xAC,
+		CopyImmediate16AddressToA = 0xAD,
 		CopyImmediate16AddressToX = 0xAE,
 		// 0xAF
 
@@ -222,7 +222,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xBE
 		// 0xBF
 
-		// 0xC0
+		CompareYToImmediate8 = 0xC0,
 		// 0xC1
 		// 0xC2
 		// 0xC3
@@ -232,7 +232,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xC7
 
 		IncrementY = 0xC8,
-		// 0xC9
+		CompareAToImmediate8 = 0xC9,
 		DecrementX = 0xCA,
 		// 0xCB
 		// 0xCC
@@ -258,7 +258,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xDE
 		// 0xDF
 
-		// 0xE0
+		CompareXToImmediate8 = 0xE0,
 		// 0xE1
 		// 0xE2
 		// 0xE3

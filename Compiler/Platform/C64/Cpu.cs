@@ -14,6 +14,24 @@ namespace ILCompiler.Platform.C64
 			}
 		}
 
+		internal static void CopyAToAbsolute(int absolute)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16Address);
+			Compiler.Writer.Write((ushort)absolute);
+		}
+
+		internal static void CopyAbsoluteToA(int absolute)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyImmediate16AddressToA);
+			Compiler.Writer.Write((ushort)absolute);
+		}
+
+		internal static void AddAbsolutePlusCarryToA(int absolute)
+		{
+			Compiler.Writer.Write((byte)OpCodes.AddImmediate16AddressPlusCarryToA);
+			Compiler.Writer.Write((ushort)absolute);
+		}
+
 		internal static void ClearCarryFlag()
 		{
 			Compiler.Writer.Write((byte)OpCodes.ClearCarryFlag);
@@ -115,6 +133,11 @@ namespace ILCompiler.Platform.C64
 			Compiler.Writer.Write(value);
 		}
 
+		internal static void CopyYToA()
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyYToA);
+		}
+
 		internal static void Call(string label)
 		{
 			if(!Compiler.Imports.Contains(label))
@@ -139,6 +162,18 @@ namespace ILCompiler.Platform.C64
 		internal static void CopyZeroPageToA(int zeroPage)
 		{
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8AddressToA);
+			Compiler.Writer.Write((byte)zeroPage);
+		}
+
+		internal static void CopyZeroPageToX(int zeroPage)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8AddressToX);
+			Compiler.Writer.Write((byte)zeroPage);
+		}
+
+		internal static void CopyZeroPageToY(int zeroPage)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8AddressToY);
 			Compiler.Writer.Write((byte)zeroPage);
 		}
 
@@ -202,6 +237,11 @@ namespace ILCompiler.Platform.C64
 			Compiler.RelativeReference(label);
 		}
 
+		internal static void IfEqual(string label)
+		{
+			IfZero(label);
+		}
+
 		internal static void CopyAToAbsolutePlusX(int absolute)
 		{
 			Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16PlusXAddress);
@@ -211,6 +251,11 @@ namespace ILCompiler.Platform.C64
 		internal static void DecrementX()
 		{
 			Compiler.Writer.Write((byte)OpCodes.DecrementX);
+		}
+
+		internal static void DecrementY()
+		{
+			Compiler.Writer.Write((byte)OpCodes.DecrementY);
 		}
 
 		internal static void AddValuePlusCarryToA(byte value)
@@ -247,6 +292,24 @@ namespace ILCompiler.Platform.C64
 		{
 			Compiler.Writer.Write((byte)OpCodes.AddImmediate8AddressPlusCarryToA);
 			Compiler.Writer.Write((byte)zeroPage);
+		}
+
+		internal static void CompareAToValue(int value)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CompareAToImmediate8);
+			Compiler.Writer.Write((byte)value);
+		}
+
+		internal static void CompareXToValue(int value)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CompareXToImmediate8);
+			Compiler.Writer.Write((byte)value);
+		}
+
+		internal static void CompareYToValue(int value)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CompareYToImmediate8);
+			Compiler.Writer.Write((byte)value);
 		}
 	}
 }

@@ -505,5 +505,94 @@ namespace ILCompiler.Library.C64
 			Compiler.Writer.Write(10);
 			Compiler.Writer.Write(1);
 		}
+
+		internal static void ReadLine(string name)
+		{
+			Compiler.Label(name);
+
+			var length = 0x02;
+			var newString = 0x04;
+			var buffer = 0x9b00;
+
+			Cpu.A = 0;
+
+			Cpu.CopyAToZeroPage(length + 0);
+
+			Compiler.Label(name + "Loop");
+
+			Cpu.Call(Kernal.ReadCharacter);
+
+			Cpu.CompareAToValue(0x00);
+
+			Cpu.IfEqual(name + "Loop");
+
+			Cpu.Call(Kernal.WriteCharacter);
+
+			Cpu.CompareAToValue(Petscii.NewLine);
+
+			Cpu.IfEqual(name + "Done");
+
+			Cpu.CopyZeroPageToX(length);
+
+			Cpu.CopyAToAbsolutePlusX(buffer);
+
+			Cpu.IncrementZeroPage(length);
+
+			Cpu.Jump(name + "Loop");
+
+			Compiler.Label(name + "Done");
+
+			// Write terminator
+			Cpu.A = 0;
+
+			Cpu.CopyZeroPageToX(length);
+
+			Cpu.CopyAToAbsolutePlusX(buffer);
+
+			Cpu.IncrementZeroPage(length);
+
+			// Create String
+			Cpu.CopyAbsoluteToA(Heap.Address + 0);
+			Cpu.CopyAToZeroPage(newString + 0);
+
+			Cpu.CopyAbsoluteToA(Heap.Address + 1);
+			Cpu.CopyAToZeroPage(newString + 1);
+
+			Cpu.ClearCarryFlag();
+
+			Cpu.CopyZeroPageToA(length + 0);
+			Cpu.AddAbsolutePlusCarryToA(Heap.Address + 0);
+			Cpu.CopyAToAbsolute(Heap.Address + 0);
+
+			Cpu.A = 0;
+			Cpu.AddAbsolutePlusCarryToA(Heap.Address + 1);
+			Cpu.CopyAToAbsolute(Heap.Address + 1);
+
+			// Copy String
+			Cpu.Y = 0;
+			Cpu.X = 0;
+
+			Compiler.Label(name + "CopyString");
+
+			Cpu.CopyAbsolutePlusXToA(buffer);
+			Cpu.CopyAToZeroPagePointerPlusY(newString);
+
+			Cpu.IfZero(name + "Return");
+
+			Cpu.IncrementX();
+			Cpu.IncrementY();
+
+			Cpu.Jump(name + "CopyString");
+
+			Compiler.Label(name + "Return");
+
+			Cpu.CopyZeroPageToA(newString + 1);
+			Stack.PushA();
+
+			Cpu.CopyZeroPageToA(newString + 0);
+			Stack.PushA();
+
+			Cpu.Return();
+		}
 	}
 }
