@@ -8,64 +8,60 @@ namespace ILCompiler.Library.C64
 {
 	public static class Console
 	{
-		public static void WriteString(string name)
+		public static void WriteString()
 		{
-			Compiler.Label(name);
+			Stack.PullZeroPage32(0x02);
 
-			Stack.PullZeroPage16(0x02);
-
-			Compiler.Label(name + "ForEachCharacter");
+			Compiler.Label(Function.Label("ForEachCharacter"));
 
 			Cpu.Y = 0;
 
 			Cpu.CopyZeroPagePointerPlusYToA(0x02);
 
-			Cpu.IfZero(name + "Done");
+			Cpu.IfZero(Function.Label("Done"));
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			Cpu.IncrementZeroPage(0x02);
 
-			Cpu.IfNotZero(name + "Skip");
+			Cpu.IfNotZero(Function.Label("Skip"));
 
 			Cpu.IncrementZeroPage(0x03);
 
-			Compiler.Label(name + "Skip");
+			Compiler.Label(Function.Label("Skip"));
 
-			Cpu.Jump(name + "ForEachCharacter");
+			Cpu.Jump(Function.Label("ForEachCharacter"));
 
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
 			Cpu.Return();
 		}
 
-		public static void WriteLineString(string name)
+		public static void WriteLineString()
 		{
-			Compiler.Label(name);
+			Stack.PullZeroPage32(0x02);
 
-			Stack.PullZeroPage16(0x02);
-
-			Compiler.Label(name + "ForEachCharacter");
+			Compiler.Label(Function.Label("ForEachCharacter"));
 
 			Cpu.Y = 0;
 
 			Cpu.CopyZeroPagePointerPlusYToA(0x02);
 
-			Cpu.IfZero(name + "Done");
+			Cpu.IfZero(Function.Label("Done"));
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			Cpu.IncrementZeroPage(0x02);
 
-			Cpu.IfNotZero(name + "Skip");
+			Cpu.IfNotZero(Function.Label("Skip"));
 
 			Cpu.IncrementZeroPage(0x03);
 
-			Compiler.Label(name + "Skip");
+			Compiler.Label(Function.Label("Skip"));
 
-			Cpu.Jump(name + "ForEachCharacter");
+			Cpu.Jump(Function.Label("ForEachCharacter"));
 
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
 			Cpu.A = Petscii.NewLine;
 
@@ -74,10 +70,8 @@ namespace ILCompiler.Library.C64
 			Cpu.Return();
 		}
 
-		public static void WriteLineInt(string name)
+		public static void WriteLineInt()
 		{
-			Compiler.Label(name);
-
 			var value = 0x02;
 			var digitValue = 0x06;
 			var digitValuePointer = 0x0a;
@@ -93,42 +87,42 @@ namespace ILCompiler.Library.C64
 			Cpu.OrAWithZeroPage(value + 2);
 			Cpu.OrAWithZeroPage(value + 3);
 
-			Cpu.IfNotZero(name + "CheckForNegative");
+			Cpu.IfNotZero(Function.Label("CheckForNegative"));
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
-			Cpu.Jump(name + "Done");
+			Cpu.Jump(Function.Label("Done"));
 
 			// Check For Negative
-			Compiler.Label(name + "CheckForNegative");
+			Compiler.Label(Function.Label("CheckForNegative"));
 
 			Cpu.CopyZeroPageToA(value + 3);
 
-			Cpu.IfNotNegative(name + "FindFirstDigit");
+			Cpu.IfNotNegative(Function.Label("FindFirstDigit"));
 
 			Cpu.A = Petscii.GetBytes("-")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			// Skip Zero Digits
-			Compiler.Label(name + "FindFirstDigit");
+			Compiler.Label(Function.Label("FindFirstDigit"));
 
 			Cpu.A = 10;
 			Cpu.CopyAToZeroPage(count);
 
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.LowReference(name + "DigitValues");
+			Compiler.LowReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer);
 
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.HighReference(name + "DigitValues");
+			Compiler.HighReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Compiler.Label(name + "ForEachDigit");
+			Compiler.Label(Function.Label("ForEachDigit"));
 
 			Cpu.Y = 0;
 			Cpu.CopyZeroPagePointerPlusYToA(digitValuePointer);
@@ -148,25 +142,25 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CopyZeroPageToA(value + 3);
 			Cpu.CompareAToZeroPage(digitValue + 3);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 2);
 			Cpu.CompareAToZeroPage(digitValue + 2);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 1);
 			Cpu.CompareAToZeroPage(digitValue + 1);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 0);
 			Cpu.CompareAToZeroPage(digitValue + 0);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.Jump(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.Jump(Function.Label("DrawDigits"));
 
-			Compiler.Label(name + "NextDigit");
+			Compiler.Label(Function.Label("NextDigit"));
 
 			Cpu.DecrementZeroPage(count);
 
@@ -178,12 +172,12 @@ namespace ILCompiler.Library.C64
 			Cpu.AddValuePlusCarryToA(0);
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Cpu.Jump(name + "ForEachDigit");
+			Cpu.Jump(Function.Label("ForEachDigit"));
 
 			// Draw Remaining Digits
-			Compiler.Label(name + "DrawDigits");
+			Compiler.Label(Function.Label("DrawDigits"));
 
-			Compiler.Label(name + "ForEachCharacter");
+			Compiler.Label(Function.Label("ForEachCharacter"));
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
@@ -206,28 +200,28 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyAToZeroPage(digitValue + 3);
 
 			// While Value > DigitValue
-			Compiler.Label(name + "Loop");
+			Compiler.Label(Function.Label("Loop"));
 
 			Cpu.CopyZeroPageToA(value + 3);
 			Cpu.CompareAToZeroPage(digitValue + 3);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 2);
 			Cpu.CompareAToZeroPage(digitValue + 2);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 1);
 			Cpu.CompareAToZeroPage(digitValue + 1);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 0);
 			Cpu.CompareAToZeroPage(digitValue + 0);
-			Cpu.IfLess(name + "DrawDigit");
+			Cpu.IfLess(Function.Label("DrawDigit"));
 
-			Compiler.Label(name + "IncrementCharacter");
+			Compiler.Label(Function.Label("IncrementCharacter"));
 
 			Cpu.IncrementZeroPage(character);
 
@@ -245,10 +239,10 @@ namespace ILCompiler.Library.C64
 			Cpu.SubtractZeroPagePlusCarryFromA(digitValue + 3);
 			Cpu.CopyAToZeroPage(value + 3);
 
-			Cpu.Jump(name + "Loop");
+			Cpu.Jump(Function.Label("Loop"));
 
 			// Draw Digit
-			Compiler.Label(name + "DrawDigit");
+			Compiler.Label(Function.Label("DrawDigit"));
 
 			Cpu.CopyZeroPageToA(character);
 
@@ -256,7 +250,7 @@ namespace ILCompiler.Library.C64
 
 			Cpu.DecrementZeroPage(count);
 
-			Cpu.IfZero(name + "Done");
+			Cpu.IfZero(Function.Label("Done"));
 
 			Cpu.ClearCarryFlag();
 			Cpu.CopyZeroPageToA(digitValuePointer + 0);
@@ -266,10 +260,10 @@ namespace ILCompiler.Library.C64
 			Cpu.AddValuePlusCarryToA(0);
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Cpu.Jump(name + "ForEachCharacter");
+			Cpu.Jump(Function.Label("ForEachCharacter"));
 
 			// Done
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
 			Cpu.A = Petscii.NewLine;
 
@@ -278,7 +272,7 @@ namespace ILCompiler.Library.C64
 			Cpu.Return();
 
 			// Digit Values
-			Compiler.Label(name + "DigitValues");
+			Compiler.Label(Function.Label("DigitValues"));
 
 			Compiler.Writer.Write(1000000000);
 			Compiler.Writer.Write(100000000);
@@ -292,10 +286,8 @@ namespace ILCompiler.Library.C64
 			Compiler.Writer.Write(1);
 		}
 
-		public static void WriteInt(string name)
+		public static void WriteInt()
 		{
-			Compiler.Label(name);
-
 			var value = 0x02;
 			var digitValue = 0x06;
 			var digitValuePointer = 0x0a;
@@ -311,42 +303,42 @@ namespace ILCompiler.Library.C64
 			Cpu.OrAWithZeroPage(value + 2);
 			Cpu.OrAWithZeroPage(value + 3);
 
-			Cpu.IfNotZero(name + "CheckForNegative");
+			Cpu.IfNotZero(Function.Label("CheckForNegative"));
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
-			Cpu.Jump(name + "Done");
+			Cpu.Jump(Function.Label("Done"));
 
 			// Check For Negative
-			Compiler.Label(name + "CheckForNegative");
+			Compiler.Label(Function.Label("CheckForNegative"));
 
 			Cpu.CopyZeroPageToA(value + 3);
 
-			Cpu.IfNotNegative(name + "FindFirstDigit");
+			Cpu.IfNotNegative(Function.Label("FindFirstDigit"));
 
 			Cpu.A = Petscii.GetBytes("-")[0];
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			// Skip Zero Digits
-			Compiler.Label(name + "FindFirstDigit");
+			Compiler.Label(Function.Label("FindFirstDigit"));
 
 			Cpu.A = 10;
 			Cpu.CopyAToZeroPage(count);
 
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.LowReference(name + "DigitValues");
+			Compiler.LowReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer);
 
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.HighReference(name + "DigitValues");
+			Compiler.HighReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Compiler.Label(name + "ForEachDigit");
+			Compiler.Label(Function.Label("ForEachDigit"));
 
 			Cpu.Y = 0;
 			Cpu.CopyZeroPagePointerPlusYToA(digitValuePointer);
@@ -366,25 +358,25 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CopyZeroPageToA(value + 3);
 			Cpu.CompareAToZeroPage(digitValue + 3);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 2);
 			Cpu.CompareAToZeroPage(digitValue + 2);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 1);
 			Cpu.CompareAToZeroPage(digitValue + 1);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.IfNotEqual(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.IfNotEqual(Function.Label("DrawDigits"));
 
 			Cpu.CopyZeroPageToA(value + 0);
 			Cpu.CompareAToZeroPage(digitValue + 0);
-			Cpu.IfLess(name + "NextDigit");
-			Cpu.Jump(name + "DrawDigits");
+			Cpu.IfLess(Function.Label("NextDigit"));
+			Cpu.Jump(Function.Label("DrawDigits"));
 
-			Compiler.Label(name + "NextDigit");
+			Compiler.Label(Function.Label("NextDigit"));
 
 			Cpu.DecrementZeroPage(count);
 
@@ -396,12 +388,12 @@ namespace ILCompiler.Library.C64
 			Cpu.AddValuePlusCarryToA(0);
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Cpu.Jump(name + "ForEachDigit");
+			Cpu.Jump(Function.Label("ForEachDigit"));
 
 			// Draw Remaining Digits
-			Compiler.Label(name + "DrawDigits");
+			Compiler.Label(Function.Label("DrawDigits"));
 
-			Compiler.Label(name + "ForEachCharacter");
+			Compiler.Label(Function.Label("ForEachCharacter"));
 
 			Cpu.A = Petscii.GetBytes("0")[0];
 
@@ -424,28 +416,28 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyAToZeroPage(digitValue + 3);
 
 			// While Value > DigitValue
-			Compiler.Label(name + "Loop");
+			Compiler.Label(Function.Label("Loop"));
 
 			Cpu.CopyZeroPageToA(value + 3);
 			Cpu.CompareAToZeroPage(digitValue + 3);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 2);
 			Cpu.CompareAToZeroPage(digitValue + 2);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 1);
 			Cpu.CompareAToZeroPage(digitValue + 1);
-			Cpu.IfLess(name + "DrawDigit");
-			Cpu.IfNotEqual(name + "IncrementCharacter");
+			Cpu.IfLess(Function.Label("DrawDigit"));
+			Cpu.IfNotEqual(Function.Label("IncrementCharacter"));
 
 			Cpu.CopyZeroPageToA(value + 0);
 			Cpu.CompareAToZeroPage(digitValue + 0);
-			Cpu.IfLess(name + "DrawDigit");
+			Cpu.IfLess(Function.Label("DrawDigit"));
 
-			Compiler.Label(name + "IncrementCharacter");
+			Compiler.Label(Function.Label("IncrementCharacter"));
 
 			Cpu.IncrementZeroPage(character);
 
@@ -463,10 +455,10 @@ namespace ILCompiler.Library.C64
 			Cpu.SubtractZeroPagePlusCarryFromA(digitValue + 3);
 			Cpu.CopyAToZeroPage(value + 3);
 
-			Cpu.Jump(name + "Loop");
+			Cpu.Jump(Function.Label("Loop"));
 
 			// Draw Digit
-			Compiler.Label(name + "DrawDigit");
+			Compiler.Label(Function.Label("DrawDigit"));
 
 			Cpu.CopyZeroPageToA(character);
 
@@ -474,7 +466,7 @@ namespace ILCompiler.Library.C64
 
 			Cpu.DecrementZeroPage(count);
 
-			Cpu.IfZero(name + "Done");
+			Cpu.IfZero(Function.Label("Done"));
 
 			Cpu.ClearCarryFlag();
 			Cpu.CopyZeroPageToA(digitValuePointer + 0);
@@ -484,15 +476,15 @@ namespace ILCompiler.Library.C64
 			Cpu.AddValuePlusCarryToA(0);
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
-			Cpu.Jump(name + "ForEachCharacter");
+			Cpu.Jump(Function.Label("ForEachCharacter"));
 
 			// Done
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
 			Cpu.Return();
 
 			// Digit Values
-			Compiler.Label(name + "DigitValues");
+			Compiler.Label(Function.Label("DigitValues"));
 
 			Compiler.Writer.Write(1000000000);
 			Compiler.Writer.Write(100000000);
@@ -506,10 +498,8 @@ namespace ILCompiler.Library.C64
 			Compiler.Writer.Write(1);
 		}
 
-		internal static void ReadLine(string name)
+		internal static void ReadLine()
 		{
-			Compiler.Label(name);
-
 			var length = 0x02;
 			var newString = 0x04;
 			var buffer = 0x9b00;
@@ -518,19 +508,19 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CopyAToZeroPage(length + 0);
 
-			Compiler.Label(name + "Loop");
+			Compiler.Label(Function.Label("Loop"));
 
 			Cpu.Call(Kernal.ReadCharacter);
 
 			Cpu.CompareAToValue(0x00);
 
-			Cpu.IfEqual(name + "Loop");
+			Cpu.IfEqual(Function.Label("Loop"));
 
 			Cpu.Call(Kernal.WriteCharacter);
 
 			Cpu.CompareAToValue(Petscii.NewLine);
 
-			Cpu.IfEqual(name + "Done");
+			Cpu.IfEqual(Function.Label("Done"));
 
 			Cpu.CopyZeroPageToX(length);
 
@@ -538,11 +528,11 @@ namespace ILCompiler.Library.C64
 
 			Cpu.IncrementZeroPage(length);
 
-			Cpu.Jump(name + "Loop");
+			Cpu.Jump(Function.Label("Loop"));
 
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
-			// Write terminator
+			// Write Terminator
 			Cpu.A = 0;
 
 			Cpu.CopyZeroPageToX(length);
@@ -572,19 +562,23 @@ namespace ILCompiler.Library.C64
 			Cpu.Y = 0;
 			Cpu.X = 0;
 
-			Compiler.Label(name + "CopyString");
+			Compiler.Label(Function.Label("CopyString"));
 
 			Cpu.CopyAbsolutePlusXToA(buffer);
 			Cpu.CopyAToZeroPagePointerPlusY(newString);
 
-			Cpu.IfZero(name + "Return");
+			Cpu.IfZero(Function.Label("Return"));
 
 			Cpu.IncrementX();
 			Cpu.IncrementY();
 
-			Cpu.Jump(name + "CopyString");
+			Cpu.Jump(Function.Label("CopyString"));
 
-			Compiler.Label(name + "Return");
+			Compiler.Label(Function.Label("Return"));
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
 
 			Cpu.CopyZeroPageToA(newString + 1);
 			Stack.PushA();

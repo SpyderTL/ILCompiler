@@ -12,7 +12,7 @@ namespace ILCompiler.Library.C64
 
 		//	Cpu.Return();
 
-		//	Compiler.Label(name + "DigitValues");
+		//	Compiler.Label(Function.Label("DigitValues"));
 
 		//	Compiler.Writer.Write(1000000000);
 		//	Compiler.Writer.Write(100000000);
@@ -26,10 +26,8 @@ namespace ILCompiler.Library.C64
 		//	Compiler.Writer.Write(1);
 		//}
 
-		internal static void Parse(string name)
+		internal static void Parse()
 		{
-			Compiler.Label(name);
-
 			var stringPointer = 0x02;
 			var value = 0x04;
 			var digitValuePointer = 0x08;
@@ -48,36 +46,36 @@ namespace ILCompiler.Library.C64
 			// Get Length
 			Cpu.Y = 0;
 
-			Compiler.Label(name + "GetLength");
+			Compiler.Label(Function.Label("GetLength"));
 
 			Cpu.CopyZeroPagePointerPlusYToA(stringPointer);
 
-			Cpu.IfZero(name + "CheckLength");
+			Cpu.IfZero(Function.Label("CheckLength"));
 
 			Cpu.IncrementY();
 
-			Cpu.Jump(name + "GetLength");
+			Cpu.Jump(Function.Label("GetLength"));
 
 			// Check Length
-			Compiler.Label(name + "CheckLength");
+			Compiler.Label(Function.Label("CheckLength"));
 
 			Cpu.CompareYToValue(0);
 
-			Cpu.IfEqual(name + "Done");
+			Cpu.IfEqual(Function.Label("Done"));
 
 			// Get Digit Values
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.LowReference(name + "DigitValues");
+			Compiler.LowReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer);
 
 			Compiler.Writer.Write((byte)OpCodes.CopyImmediate8ToA);
-			Compiler.HighReference(name + "DigitValues");
+			Compiler.HighReference(Function.Label("DigitValues"));
 
 			Cpu.CopyAToZeroPage(digitValuePointer + 1);
 
 			// Add Digits
-			Compiler.Label(name + "AddDigit");
+			Compiler.Label(Function.Label("AddDigit"));
 
 			Cpu.DecrementY();
 
@@ -85,7 +83,7 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CompareAToValue(Petscii.GetBytes("0")[0]);
 
-			Cpu.IfEqual(name + "NextDigit");
+			Cpu.IfEqual(Function.Label("NextDigit"));
 
 			Cpu.CopyAToZeroPage(digit);
 
@@ -113,7 +111,7 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyAToY();
 
 			// Add Digit Value
-			Compiler.Label(name + "Loop");
+			Compiler.Label(Function.Label("Loop"));
 
 			Cpu.ClearCarryFlag();
 
@@ -139,9 +137,9 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CompareAToZeroPage(digit);
 
-			Cpu.IfNotEqual(name + "Loop");
+			Cpu.IfNotEqual(Function.Label("Loop"));
 
-			Compiler.Label(name + "NextDigit");
+			Compiler.Label(Function.Label("NextDigit"));
 
 			Cpu.ClearCarryFlag();
 
@@ -163,16 +161,17 @@ namespace ILCompiler.Library.C64
 
 			Cpu.CompareYToValue(0);
 
-			Cpu.IfNotEqual(name + "AddDigit");
+			Cpu.IfNotEqual(Function.Label("AddDigit"));
 
 			// Return Value
-			Compiler.Label(name + "Done");
+			Compiler.Label(Function.Label("Done"));
 
 			Stack.PushZeroPage32(value);
 
 			Cpu.Return();
 
-			Compiler.Label(name + "DigitValues");
+			// Digit Value Table
+			Compiler.Label(Function.Label("DigitValues"));
 
 			Compiler.Writer.Write(1);
 			Compiler.Writer.Write(10);
@@ -184,6 +183,258 @@ namespace ILCompiler.Library.C64
 			Compiler.Writer.Write(10000000);
 			Compiler.Writer.Write(100000000);
 			Compiler.Writer.Write(1000000000);
+		}
+
+		internal static void Multiply()
+		{
+			var value1 = 0x02;
+			var value2 = 0x06;
+			var result = 0x0a;
+
+			// Result = 0;
+			Cpu.A = 0;
+
+			Cpu.CopyAToZeroPage(result + 0);
+			Cpu.CopyAToZeroPage(result + 1);
+			Cpu.CopyAToZeroPage(result + 2);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			Stack.PullZeroPage32(value2);
+			Stack.PullZeroPage32(value1);
+
+			Cpu.CopyZeroPageToA(value1 + 0);
+			Cpu.OrAWithZeroPage(value1 + 1);
+			Cpu.OrAWithZeroPage(value1 + 2);
+			Cpu.OrAWithZeroPage(value1 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Compiler.Label(Function.Label("Loop"));
+
+			Cpu.ClearCarryFlag();
+
+			Cpu.CopyZeroPageToA(result + 0);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 0);
+			Cpu.CopyAToZeroPage(result + 0);
+
+			Cpu.CopyZeroPageToA(result + 1);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 1);
+			Cpu.CopyAToZeroPage(result + 1);
+
+			Cpu.CopyZeroPageToA(result + 2);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 2);
+			Cpu.CopyAToZeroPage(result + 2);
+
+			Cpu.CopyZeroPageToA(result + 3);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 3);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			// Decrement Value 2
+			Cpu.SetCarryFlag();
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.SubtractValuePlusCarryFromA(1);
+			Cpu.CopyAToZeroPage(value2 + 0);
+
+			Cpu.CopyZeroPageToA(value2 + 1);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 1);
+
+			Cpu.CopyZeroPageToA(value2 + 2);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 2);
+
+			Cpu.CopyZeroPageToA(value2 + 3);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 3);
+
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 0);
+
+			Cpu.IfNotZero(Function.Label("Loop"));
+
+			// Done
+			Compiler.Label(Function.Label("Done"));
+
+			Stack.PushZeroPage32(result);
+
+			Cpu.Return();
+		}
+
+		internal static void Divide()
+		{
+			var value1 = 0x02;
+			var value2 = 0x06;
+			var result = 0x0a;
+
+			// Result = 0;
+			Cpu.A = 0;
+
+			Cpu.CopyAToZeroPage(result + 0);
+			Cpu.CopyAToZeroPage(result + 1);
+			Cpu.CopyAToZeroPage(result + 2);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			Stack.PullZeroPage32(value2);
+			Stack.PullZeroPage32(value1);
+
+			Cpu.CopyZeroPageToA(value1 + 0);
+			Cpu.OrAWithZeroPage(value1 + 1);
+			Cpu.OrAWithZeroPage(value1 + 2);
+			Cpu.OrAWithZeroPage(value1 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Compiler.Label(Function.Label("Loop"));
+
+			Cpu.ClearCarryFlag();
+
+			Cpu.CopyZeroPageToA(result + 0);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 0);
+			Cpu.CopyAToZeroPage(result + 0);
+
+			Cpu.CopyZeroPageToA(result + 1);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 1);
+			Cpu.CopyAToZeroPage(result + 1);
+
+			Cpu.CopyZeroPageToA(result + 2);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 2);
+			Cpu.CopyAToZeroPage(result + 2);
+
+			Cpu.CopyZeroPageToA(result + 3);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 3);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			// Decrement Value 2
+			Cpu.SetCarryFlag();
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.SubtractValuePlusCarryFromA(1);
+			Cpu.CopyAToZeroPage(value2 + 0);
+
+			Cpu.CopyZeroPageToA(value2 + 1);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 1);
+
+			Cpu.CopyZeroPageToA(value2 + 2);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 2);
+
+			Cpu.CopyZeroPageToA(value2 + 3);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 3);
+
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 0);
+
+			Cpu.IfNotZero(Function.Label("Loop"));
+
+			// Done
+			Compiler.Label(Function.Label("Done"));
+
+			Stack.PushZeroPage32(result);
+
+			Cpu.Return();
+		}
+
+		internal static void Modulus()
+		{
+			var value1 = 0x02;
+			var value2 = 0x06;
+			var result = 0x0a;
+
+			// Result = 0;
+			Cpu.A = 0;
+
+			Cpu.CopyAToZeroPage(result + 0);
+			Cpu.CopyAToZeroPage(result + 1);
+			Cpu.CopyAToZeroPage(result + 2);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			Stack.PullZeroPage32(value2);
+			Stack.PullZeroPage32(value1);
+
+			Cpu.CopyZeroPageToA(value1 + 0);
+			Cpu.OrAWithZeroPage(value1 + 1);
+			Cpu.OrAWithZeroPage(value1 + 2);
+			Cpu.OrAWithZeroPage(value1 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 3);
+
+			Cpu.IfZero(Function.Label("Done"));
+
+			Compiler.Label(Function.Label("Loop"));
+
+			Cpu.ClearCarryFlag();
+
+			Cpu.CopyZeroPageToA(result + 0);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 0);
+			Cpu.CopyAToZeroPage(result + 0);
+
+			Cpu.CopyZeroPageToA(result + 1);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 1);
+			Cpu.CopyAToZeroPage(result + 1);
+
+			Cpu.CopyZeroPageToA(result + 2);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 2);
+			Cpu.CopyAToZeroPage(result + 2);
+
+			Cpu.CopyZeroPageToA(result + 3);
+			Cpu.AddZeroPagePlusCarryToA(value1 + 3);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			// Decrement Value 2
+			Cpu.SetCarryFlag();
+
+			Cpu.CopyZeroPageToA(value2 + 0);
+			Cpu.SubtractValuePlusCarryFromA(1);
+			Cpu.CopyAToZeroPage(value2 + 0);
+
+			Cpu.CopyZeroPageToA(value2 + 1);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 1);
+
+			Cpu.CopyZeroPageToA(value2 + 2);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 2);
+
+			Cpu.CopyZeroPageToA(value2 + 3);
+			Cpu.SubtractValuePlusCarryFromA(0);
+			Cpu.CopyAToZeroPage(value2 + 3);
+
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.OrAWithZeroPage(value2 + 0);
+
+			Cpu.IfNotZero(Function.Label("Loop"));
+
+			// Done
+			Compiler.Label(Function.Label("Done"));
+
+			Stack.PushZeroPage32(result);
+
+			Cpu.Return();
 		}
 	}
 }
