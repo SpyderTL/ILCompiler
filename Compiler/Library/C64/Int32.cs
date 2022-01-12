@@ -185,6 +185,76 @@ namespace ILCompiler.Library.C64
 			Compiler.Writer.Write(1000000000);
 		}
 
+		internal static void Add()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Cpu.ClearCarryFlag();
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.AddZeroPagePlusCarryToA(0x06);
+			Cpu.CopyAToZeroPage(0x02);
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.AddZeroPagePlusCarryToA(0x07);
+			Cpu.CopyAToZeroPage(0x03);
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.AddZeroPagePlusCarryToA(0x08);
+			Cpu.CopyAToZeroPage(0x04);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.AddZeroPagePlusCarryToA(0x09);
+			Cpu.CopyAToZeroPage(0x05);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x04);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x03);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x02);
+			Stack.PushA();
+
+			Cpu.Return();
+		}
+
+		internal static void Subtract()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Cpu.SetCarryFlag();
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.SubtractZeroPagePlusCarryFromA(0x06);
+			Cpu.CopyAToZeroPage(0x02);
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.SubtractZeroPagePlusCarryFromA(0x07);
+			Cpu.CopyAToZeroPage(0x03);
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.SubtractZeroPagePlusCarryFromA(0x08);
+			Cpu.CopyAToZeroPage(0x04);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.SubtractZeroPagePlusCarryFromA(0x09);
+			Cpu.CopyAToZeroPage(0x05);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x04);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x03);
+			Stack.PushA();
+			Cpu.CopyZeroPageToA(0x02);
+			Stack.PushA();
+
+			Cpu.Return();
+		}
+
 		internal static void Multiply()
 		{
 			var value1 = 0x02;

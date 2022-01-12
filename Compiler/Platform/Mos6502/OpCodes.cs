@@ -17,7 +17,7 @@ namespace ILCompiler.Platform.Mos6502
 
 		// 0x08
 		// 0x09
-		// 0x0A
+		ShiftALeft = 0x0A,
 		// 0x0B
 		// 0x0C
 		// 0x0D
@@ -123,7 +123,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x66
 		// 0x67
 
-		// 0x68
+		PullAFromStack = 0x68,
 		AddImmediate8PlusCarryToA = 0x69,
 		// 0x6A
 		// 0x6B
@@ -156,7 +156,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x83
 		// 0x84
 		CopyAToImmediate8Address = 0x85,
-		// 0x86
+		CopyXToImmediate8Address = 0x86,
 		// 0x87
 
 		DecrementY = 0x88,

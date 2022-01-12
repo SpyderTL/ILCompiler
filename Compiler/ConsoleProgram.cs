@@ -111,383 +111,102 @@ namespace ILCompiler
 									Stack.PushA();
 									break;
 
+								case Mono.Cecil.Cil.Code.Ldc_I4_3:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x03;
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldc_I4_4:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x04;
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldc_I4_5:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x05;
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldc_I4_6:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x06;
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldc_I4_7:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x07;
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldc_I4_8:
+									Cpu.A = 0x00;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.A = 0x08;
+									Stack.PushA();
+									break;
+
 								case Mono.Cecil.Cil.Code.Stloc_0:
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x02);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x03);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x04);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyStackPointerToX();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
+									Cpu.Call("Stloc_0");
 									break;
 
 								case Mono.Cecil.Cil.Code.Stloc_1:
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x02);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x03);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x04);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
+									Cpu.Call("Stloc_1");
 									break;
 
 								case Mono.Cecil.Cil.Code.Stloc_2:
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x02);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x03);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x04);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
+									Cpu.Call("Stloc_2");
 									break;
 
 								case Mono.Cecil.Cil.Code.Stloc_3:
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x02);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x03);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x04);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
+									Cpu.Call("Stloc_3");
 									break;
 
 								case Mono.Cecil.Cil.Code.Stloc_S:
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x02);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x03);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x04);
-									Stack.PullA();
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyStackPointerToX();
-
 									var variable = instruction.Operand as Mono.Cecil.Cil.VariableDefinition;
-
-									for (int x = 0; x < variable.Index; x++)
-									{
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-									}
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.IncrementX();
-									Cpu.CopyAToAbsolutePlusX(0x100);
+									Cpu.A = variable.Index;
+									Cpu.Call("Stloc_S");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldloc_0:
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+									Cpu.Call("Ldloc_0");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldloc_1:
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+									Cpu.Call("Ldloc_1");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldloc_2:
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+									Cpu.Call("Ldloc_2");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldloc_3:
-									Cpu.CopyStackPointerToX();
-
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-									Cpu.IncrementX();
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+									Cpu.Call("Ldloc_3");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldloc_S:
-									Cpu.CopyStackPointerToX();
-
 									variable = instruction.Operand as Mono.Cecil.Cil.VariableDefinition;
-
-									for (int x = 0; x < variable.Index; x++)
-									{
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-										Cpu.IncrementX();
-									}
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.IncrementX();
-									Cpu.CopyAbsolutePlusXToA(0x100);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+									Cpu.A = variable.Index;
+									Cpu.Call("Ldloc_S");
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldstr:
@@ -523,35 +242,11 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Add:
-									Stack.PullZeroPage32(0x02);
-									Stack.PullZeroPage32(0x06);
+									Cpu.Call("System.Int32 System.Int32::Add(System.Int32,System.Int32)");
+									break;
 
-									Cpu.ClearCarryFlag();
-
-									Cpu.CopyZeroPageToA(0x02);
-									Cpu.AddZeroPagePlusCarryToA(0x06);
-									Cpu.CopyAToZeroPage(0x02);
-
-									Cpu.CopyZeroPageToA(0x03);
-									Cpu.AddZeroPagePlusCarryToA(0x07);
-									Cpu.CopyAToZeroPage(0x03);
-
-									Cpu.CopyZeroPageToA(0x04);
-									Cpu.AddZeroPagePlusCarryToA(0x08);
-									Cpu.CopyAToZeroPage(0x04);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Cpu.AddZeroPagePlusCarryToA(0x09);
-									Cpu.CopyAToZeroPage(0x05);
-
-									Cpu.CopyZeroPageToA(0x05);
-									Stack.PushA();
-									Cpu.CopyZeroPageToA(0x04);
-									Stack.PushA();
-									Cpu.CopyZeroPageToA(0x03);
-									Stack.PushA();
-									Cpu.CopyZeroPageToA(0x02);
-									Stack.PushA();
+								case Mono.Cecil.Cil.Code.Sub:
+									Cpu.Call("System.Int32 System.Int32::Subtract(System.Int32,System.Int32)");
 									break;
 
 								case Mono.Cecil.Cil.Code.Mul:
@@ -606,6 +301,46 @@ namespace ILCompiler
 
 						switch (name)
 						{
+							case "Ldloc_0":
+								Library.C64.Cil.Ldloc_0();
+								break;
+
+							case "Ldloc_1":
+								Library.C64.Cil.Ldloc_1();
+								break;
+
+							case "Ldloc_2":
+								Library.C64.Cil.Ldloc_2();
+								break;
+
+							case "Ldloc_3":
+								Library.C64.Cil.Ldloc_3();
+								break;
+
+							case "Ldloc_S":
+								Library.C64.Cil.Ldloc_S();
+								break;
+
+							case "Stloc_0":
+								Library.C64.Cil.Stloc_0();
+								break;
+
+							case "Stloc_1":
+								Library.C64.Cil.Stloc_1();
+								break;
+
+							case "Stloc_2":
+								Library.C64.Cil.Stloc_2();
+								break;
+
+							case "Stloc_3":
+								Library.C64.Cil.Stloc_3();
+								break;
+
+							case "Stloc_S":
+								Library.C64.Cil.Stloc_S();
+								break;
+
 							case "System.Void System.Console::Write(System.String)":
 								Library.C64.Console.WriteString();
 								break;
@@ -628,6 +363,14 @@ namespace ILCompiler
 
 							case "System.Int32 System.Int32::Parse(System.String)":
 								Library.C64.Int32.Parse();
+								break;
+
+							case "System.Int32 System.Int32::Add(System.Int32,System.Int32)":
+								Library.C64.Int32.Add();
+								break;
+
+							case "System.Int32 System.Int32::Subtract(System.Int32,System.Int32)":
+								Library.C64.Int32.Subtract();
 								break;
 
 							case "System.Int32 System.Int32::Multiply(System.Int32,System.Int32)":

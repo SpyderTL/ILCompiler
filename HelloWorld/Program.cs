@@ -4,21 +4,21 @@ namespace HelloWorld
 {
 	class Program
 	{
-		static void Main()
-		{
-			while (true)
-			{
-				var x = Console.ReadLine();
-				var y = Console.ReadLine();
+		//static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		var x = Console.ReadLine();
+		//		var y = Console.ReadLine();
 
-				var x2 = int.Parse(x);
-				var y2 = int.Parse(y);
+		//		var x2 = int.Parse(x);
+		//		var y2 = int.Parse(y);
 
-				var result = x2 % y2;
+		//		var result = x2 % y2;
 
-				Console.WriteLine(result);
-			}
-		}
+		//		Console.WriteLine(result);
+		//	}
+		//}
 
 		//static void Main()
 		//{
@@ -36,21 +36,21 @@ namespace HelloWorld
 		//	}
 		//}
 
-		//static void Main()
-		//{
-		//	while (true)
-		//	{
-		//		var x = Console.ReadLine();
-		//		var y = Console.ReadLine();
+		static void Main()
+		{
+			while (true)
+			{
+				var x = Console.ReadLine();
+				var y = Console.ReadLine();
 
-		//		var x2 = int.Parse(x);
-		//		var y2 = int.Parse(y);
+				var x2 = int.Parse(x);
+				var y2 = int.Parse(y);
 
-		//		var result = x2 * y2;
+				var result = x2 * y2;
 
-		//		Console.WriteLine(result);
-		//	}
-		//}
+				Console.WriteLine(result);
+			}
+		}
 
 		//static void Main()
 		//{
@@ -100,6 +100,20 @@ namespace HelloWorld
 		//		var a = int.Parse(x);
 		//		var b = int.Parse(y);
 		//		var c = a + b;
+
+		//		Console.WriteLine(c);
+		//	}
+		//}
+
+		//static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		var x = Console.ReadLine();
+		//		var y = Console.ReadLine();
+		//		var a = int.Parse(x);
+		//		var b = int.Parse(y);
+		//		var c = a - b;
 
 		//		Console.WriteLine(c);
 		//	}

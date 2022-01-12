@@ -214,6 +214,11 @@ namespace ILCompiler.Platform.C64
 			Compiler.Writer.Write((byte)OpCodes.PushAToStack);
 		}
 
+		internal static void PullA()
+		{
+			Compiler.Writer.Write((byte)OpCodes.PullAFromStack);
+		}
+
 		internal static void IncrementY()
 		{
 			Compiler.Writer.Write((byte)OpCodes.IncrementY);
@@ -286,6 +291,17 @@ namespace ILCompiler.Platform.C64
 		{
 			Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate8Address);
 			Compiler.Writer.Write((byte)zeroPage);
+		}
+
+		internal static void CopyXToZeroPage(int zeroPage)
+		{
+			Compiler.Writer.Write((byte)OpCodes.CopyXToImmediate8Address);
+			Compiler.Writer.Write((byte)zeroPage);
+		}
+
+		internal static void ShiftALeft()
+		{
+			Compiler.Writer.Write((byte)OpCodes.ShiftALeft);
 		}
 
 		internal static void AddZeroPagePlusCarryToA(int zeroPage)
