@@ -85,6 +85,19 @@ namespace ILCompiler
 									Stack.PushA();
 									break;
 
+								case Mono.Cecil.Cil.Code.Ldc_I4_S:
+									var sbyteValue = (sbyte)instruction.Operand;
+
+									Cpu.A = (sbyteValue >> 24) & 0xff;
+									Stack.PushA();
+									Cpu.A = (sbyteValue >> 16) & 0xff;
+									Stack.PushA();
+									Cpu.A = (sbyteValue >> 8) & 0xff;
+									Stack.PushA();
+									Cpu.A = (sbyteValue >> 0) & 0xff;
+									Stack.PushA();
+									break;
+
 								case Mono.Cecil.Cil.Code.Ldc_I4_0:
 									Cpu.A = 0x00;
 									Stack.PushA();
@@ -288,6 +301,76 @@ namespace ILCompiler
 									Cpu.Return();
 									break;
 
+								case Mono.Cecil.Cil.Code.Conv_I:
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldind_U1:
+									Stack.PullZeroPage32(0x02);
+									Cpu.A = 0;
+									Stack.PushA();
+									Stack.PushA();
+									Stack.PushA();
+									Cpu.Y = 0;
+									Cpu.CopyZeroPagePointerPlusYToA(0x02);
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Stind_I1:
+									Stack.PullZeroPage32(0x02);
+									Stack.PullZeroPage32(0x06);
+									Cpu.CopyZeroPageToA(0x02);
+									Cpu.Y = 0;
+									Cpu.CopyAToZeroPagePointerPlusY(0x06);
+									break;
+
+								case Mono.Cecil.Cil.Code.Stind_I2:
+									Stack.PullZeroPage32(0x02);
+									Stack.PullZeroPage32(0x06);
+
+									Cpu.CopyZeroPageToA(0x02);
+									Cpu.Y = 0;
+									Cpu.CopyAToZeroPagePointerPlusY(0x06);
+
+									Cpu.CopyZeroPageToA(0x03);
+									Cpu.IncrementY();
+									Cpu.CopyAToZeroPagePointerPlusY(0x06);
+									break;
+
+								case Mono.Cecil.Cil.Code.Clt:
+									Cpu.Call("Clt");
+									break;
+
+								case Mono.Cecil.Cil.Code.Brtrue:
+								case Mono.Cecil.Cil.Code.Brtrue_S:
+									Stack.PullZeroPage32(0x02);
+
+									Cpu.A = 0;
+
+									Cpu.CompareAToZeroPage(0x02);
+
+									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x03);
+
+									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x04);
+
+									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x05);
+
+									Cpu.IfEqual("True_" + instruction.Offset);
+
+									Compiler.Label("NotTrue_" + instruction.Offset);
+
+									target = instruction.Operand as Mono.Cecil.Cil.Instruction;
+
+									Cpu.Jump(name + "::" + target.Offset);
+
+									Compiler.Label("True_" + instruction.Offset);
+									break;
+
 								default:
 									throw new Exception("Unsupported OpCode: " + instruction.OpCode.Code);
 							}
@@ -339,6 +422,10 @@ namespace ILCompiler
 
 							case "Stloc_S":
 								Library.C64.Cil.Stloc_S();
+								break;
+
+							case "Clt":
+								Library.C64.Cil.Clt();
 								break;
 
 							case "System.Void System.Console::Write(System.String)":

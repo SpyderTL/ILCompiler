@@ -61,6 +61,7 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
+		// Modifies: A X
 		internal static void PullZeroPage32(int zeroPage)
 		{
 			Cpu.CopyAbsoluteToX(Pointer);

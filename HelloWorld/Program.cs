@@ -4,6 +4,36 @@ namespace HelloWorld
 {
 	class Program
 	{
+		unsafe static void Main()
+		{
+			while (true)
+			{
+				var borderColor = *(byte*)(0xd020);
+				borderColor++;
+				*(byte*)(0xd020) = borderColor;
+			}
+		}
+
+		//unsafe static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		var x = *(byte*)0x0400;
+		//		x++;
+		//		(*(byte*)0x0400) = x;
+		//	}
+		//}
+
+		//static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		var x = Console.ReadLine();
+
+		//		Console.WriteLine(x);
+		//	}
+		//}
+
 		//static void Main()
 		//{
 		//	while (true)
@@ -36,21 +66,21 @@ namespace HelloWorld
 		//	}
 		//}
 
-		static void Main()
-		{
-			while (true)
-			{
-				var x = Console.ReadLine();
-				var y = Console.ReadLine();
+		//static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		var x = Console.ReadLine();
+		//		var y = Console.ReadLine();
 
-				var x2 = int.Parse(x);
-				var y2 = int.Parse(y);
+		//		var x2 = int.Parse(x);
+		//		var y2 = int.Parse(y);
 
-				var result = x2 * y2;
+		//		var result = x2 * y2;
 
-				Console.WriteLine(result);
-			}
-		}
+		//		Console.WriteLine(result);
+		//	}
+		//}
 
 		//static void Main()
 		//{

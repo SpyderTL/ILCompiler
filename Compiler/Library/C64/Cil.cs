@@ -456,5 +456,48 @@ namespace ILCompiler.Library.C64
 
 			Cpu.Return();
 		}
+
+		internal static void Clt()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.CompareAToZeroPage(0x09);
+			Cpu.IfLess("Clt_True");
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.CompareAToZeroPage(0x08);
+			Cpu.IfLess("Clt_True");
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.CompareAToZeroPage(0x07);
+			Cpu.IfLess("Clt_True");
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.CompareAToZeroPage(0x06);
+			Cpu.IfLess("Clt_True");
+
+			Compiler.Label("Clt_False");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+
+			Cpu.Return();
+
+			Compiler.Label("Clt_True");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+			Cpu.A = 1;
+			Stack.PushA();
+
+			Cpu.Return();
+		}
 	}
 }
