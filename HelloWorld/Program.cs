@@ -1,4 +1,5 @@
 ﻿using System;
+using Platform.C64;
 
 namespace HelloWorld
 {
@@ -6,11 +7,9 @@ namespace HelloWorld
 	{
 		unsafe static void Main()
 		{
-			while (true)
+			for (int i = 0; i < 25 * 40; i++)
 			{
-				var borderColor = *(byte*)(0xd020);
-				borderColor++;
-				*(byte*)(0xd020) = borderColor;
+				*(char*)(0x400 + i) = (char)24;
 			}
 		}
 

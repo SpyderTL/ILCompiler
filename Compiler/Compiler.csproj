@@ -11,4 +11,8 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Documentation\" />
+  </ItemGroup>
+
 </Project>

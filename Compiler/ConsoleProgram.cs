@@ -12,6 +12,8 @@ namespace ILCompiler
 {
 	internal class ConsoleProgram
 	{
+		internal const int ArgumentPointer = 0xfb;
+
 		internal static void Start()
 		{
 			Stack.Pointer = 0x9e00;
@@ -22,12 +24,43 @@ namespace ILCompiler
 
 			Heap.Reset();
 
-			var assembly = AssemblyDefinition.ReadAssembly(Arguments.Source);
-			var assemblyMethods = assembly.Modules.SelectMany(x => x.Types).SelectMany(x => x.Methods).ToDictionary(x => x.FullName);
+			var assemblies = new List<AssemblyDefinition>();
+			var newAssemblies = new Queue<string>();
+
+			newAssemblies.Enqueue(Arguments.Source);
+
+			while (newAssemblies.Count > 0)
+			{
+				var name = newAssemblies.Dequeue();
+				var assembly = AssemblyDefinition.ReadAssembly(name);
+
+				assemblies.Add(assembly);
+
+				if(assemblies.Count == 1)
+					Compiler.Imports.Add(assembly.EntryPoint.FullName);
+
+				foreach (var module in assembly.Modules)
+				{
+					foreach (var reference in module.AssemblyReferences)
+					{
+						var path = Path.Combine(Path.GetDirectoryName(Arguments.Source), reference.Name + ".dll");
+
+						if (File.Exists(path))
+						{
+							var assembly2 = System.Reflection.Assembly.Load(File.ReadAllBytes(path));
+
+							if (assembly2 == null)
+								throw new Exception("Could not load assembly: " + reference.Name);
+
+							newAssemblies.Enqueue(path);
+						}
+					}
+				}
+			}
+
+			var assemblyMethods = assemblies.SelectMany(x => x.Modules).SelectMany(x => x.Types).SelectMany(x => x.Methods).ToDictionary(x => x.FullName);
 
 			var methods = new List<string>();
-
-			Compiler.Imports.Add(assembly.EntryPoint.FullName);
 
 			while (methods.Count < Compiler.Imports.Count)
 			{
@@ -39,8 +72,17 @@ namespace ILCompiler
 
 					if (assemblyMethods.TryGetValue(name, out MethodDefinition assemblyMethod))
 					{
+						// Label Method
 						Compiler.Label(name);
 
+						// Save Old Argument Pointer
+						Stack.PushZeroPage16(ArgumentPointer);
+
+						// Set New Argument Pointer
+						Cpu.CopyAbsoluteToA(Stack.Pointer);
+						Cpu.CopyAToZeroPage(ArgumentPointer);
+
+						// Allocate Variable Stack Space
 						var stackSize = assemblyMethod.Body.Variables.Count << 2;
 
 						Cpu.CopyStackPointerToX();
@@ -53,6 +95,7 @@ namespace ILCompiler
 
 						foreach (var instruction in assemblyMethod.Body.Instructions)
 						{
+							// Label Instruction By Offset
 							Compiler.Label(name + "::" + instruction.Offset);
 
 							switch (instruction.OpCode.Code)
@@ -290,6 +333,7 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Ret:
+									// Deallocate Local Variables
 									Cpu.CopyStackPointerToX();
 									Cpu.CopyXToA();
 
@@ -298,10 +342,16 @@ namespace ILCompiler
 									Cpu.CopyAToX();
 									Cpu.CopyXToStackPointer();
 
+									// Restore Old Argument Pointer
+									Stack.PullZeroPage16(ArgumentPointer);
+
 									Cpu.Return();
 									break;
 
 								case Mono.Cecil.Cil.Code.Conv_I:
+									break;
+
+								case Mono.Cecil.Cil.Code.Conv_U:
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldind_U1:
@@ -369,6 +419,60 @@ namespace ILCompiler
 									Cpu.Jump(name + "::" + target.Offset);
 
 									Compiler.Label("True_" + instruction.Offset);
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldarg_0:
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 1);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 2);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 3);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 4);
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldarg_1:
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 5);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 6);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 7);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 8);
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Ldarg_2:
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 9);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 10);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 11);
+									Stack.PushA();
+
+									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 12);
+									Stack.PushA();
 									break;
 
 								default:
@@ -522,16 +626,16 @@ namespace ILCompiler
 			writer2.Flush();
 		}
 
-		private static int VariableSize(Mono.Cecil.Cil.VariableDefinition variable)
-		{
-			switch (variable.VariableType.FullName)
-			{
-				case "Byte":
-					return 1;
+		//private static int VariableSize(Mono.Cecil.Cil.VariableDefinition variable)
+		//{
+		//	switch (variable.VariableType.FullName)
+		//	{
+		//		case "Byte":
+		//			return 1;
 
-				default:
-					return 4;
-			}
-		}
+		//		default:
+		//			return 4;
+		//	}
+		//}
 	}
 }
