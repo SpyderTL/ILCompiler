@@ -5,15 +5,28 @@ namespace HelloWorld
 {
 	class Program
 	{
-		unsafe static void Main()
+		static unsafe void Main()
 		{
-			var borderColor = (byte)0;
-			
-			while (true)
-			{
-				*(byte*)(Io.VicBorderColor) = borderColor++;
-			}
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyLow) = 0x00;
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyHigh) = 0x10;
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelAttackDecay) = 0x00;
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelSustainRelease) = 0xfa;
+
+			*(byte*)(Io.SidBaseAddress + Io.SidVolume) = 0x0f;
+
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x81;
+			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x80;
 		}
+
+		//unsafe static void Main()
+		//{
+		//	var borderColor = (byte)0;
+
+		//	while (true)
+		//	{
+		//		*(byte*)(Io.VicBorderColor) = borderColor++;
+		//	}
+		//}
 
 		//static void Main()
 		//{

@@ -497,6 +497,9 @@ namespace ILCompiler
 									Stack.PushA();
 									break;
 
+								case Mono.Cecil.Cil.Code.Ldsfld:
+									throw new Exception("Static fields not supported.");
+
 								default:
 									throw new Exception("Unsupported OpCode: " + instruction.OpCode.Code);
 							}
