@@ -3,11 +3,16 @@ using ILCompiler.Platform.C64;
 
 namespace ILCompiler.Library.C64
 {
+	// Software Stack Implementation
 	internal static class Stack
 	{
 		internal static int Address;
 		internal static int Pointer;
 
+		/// <summary>
+		/// Modifies: A X
+		/// </summary>
+		/// <param name="zeroPage"></param>
 		internal static void PushZeroPage16(int zeroPage)
 		{
 			Cpu.CopyAbsoluteToX(Pointer);
@@ -23,6 +28,10 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
+		/// <summary>
+		/// Modifies: A X
+		/// </summary>
+		/// <param name="zeroPage"></param>
 		internal static void PullZeroPage16(int zeroPage)
 		{
 			Cpu.CopyAbsoluteToX(Pointer);
@@ -38,6 +47,10 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
+		/// <summary>
+		/// Modifies: A X
+		/// </summary>
+		/// <param name="zeroPage"></param>
 		internal static void PushZeroPage32(int zeroPage)
 		{
 			Cpu.CopyAbsoluteToX(Pointer);
@@ -88,6 +101,10 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
+		/// <summary>
+		/// Modifies: X
+		/// </summary>
+		/// <param name="zeroPage"></param>
 		internal static void PushA()
 		{
 			Cpu.CopyAbsoluteToX(Pointer);
@@ -99,6 +116,10 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyXToAbsolute(Pointer);
 		}
 
+		/// <summary>
+		/// Modifies: X
+		/// </summary>
+		/// <param name="zeroPage"></param>
 		internal static void PullA()
 		{
 			Cpu.CopyAbsoluteToX(Pointer);

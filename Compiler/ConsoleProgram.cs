@@ -12,7 +12,7 @@ namespace ILCompiler
 {
 	internal class ConsoleProgram
 	{
-		internal const int ArgumentPointer = 0xfb;
+		internal const int FramePointer = 0xfb;
 
 		internal static void Start()
 		{
@@ -76,22 +76,25 @@ namespace ILCompiler
 						Compiler.Label(name);
 
 						// Save Old Argument Pointer
-						Stack.PushZeroPage16(ArgumentPointer);
+						Stack.PushZeroPage16(FramePointer);
 
 						// Set New Argument Pointer
 						Cpu.CopyAbsoluteToA(Stack.Pointer);
-						Cpu.CopyAToZeroPage(ArgumentPointer);
+						Cpu.CopyAToZeroPage(FramePointer);
 
 						// Allocate Variable Stack Space
 						var stackSize = assemblyMethod.Body.Variables.Count << 2;
 
-						Cpu.CopyStackPointerToX();
-						Cpu.CopyXToA();
+						if (stackSize > 0)
+						{
+							Cpu.CopyStackPointerToX();
+							Cpu.CopyXToA();
 
-						Library.C64.Math.SubtractFromA((byte)stackSize);
+							Library.C64.Math.SubtractFromA((byte)stackSize);
 
-						Cpu.CopyAToX();
-						Cpu.CopyXToStackPointer();
+							Cpu.CopyAToX();
+							Cpu.CopyXToStackPointer();
+						}
 
 						foreach (var instruction in assemblyMethod.Body.Instructions)
 						{
@@ -334,16 +337,28 @@ namespace ILCompiler
 
 								case Mono.Cecil.Cil.Code.Ret:
 									// Deallocate Local Variables
-									Cpu.CopyStackPointerToX();
-									Cpu.CopyXToA();
+									if (stackSize > 0)
+									{
+										Cpu.CopyStackPointerToX();
+										Cpu.CopyXToA();
 
-									Library.C64.Math.AddToA((byte)stackSize);
+										Library.C64.Math.AddToA((byte)stackSize);
 
-									Cpu.CopyAToX();
-									Cpu.CopyXToStackPointer();
+										Cpu.CopyAToX();
+										Cpu.CopyXToStackPointer();
+									}
 
 									// Restore Old Argument Pointer
-									Stack.PullZeroPage16(ArgumentPointer);
+									Stack.PullZeroPage16(FramePointer);
+
+									// Restore Stack
+									var size = assemblyMethod.Parameters.Count * 4;
+
+									if (assemblyMethod.ReturnType.FullName != "System.Void")
+										size -= 4;
+
+									//if(size > 0)
+										// TODO: Need to remove parameters from stack, possibly.
 
 									Cpu.Return();
 									break;
@@ -422,55 +437,55 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldarg_0:
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 1);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 2);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 3);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 4);
 									Stack.PushA();
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldarg_1:
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 5);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 6);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 7);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 8);
 									Stack.PushA();
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldarg_2:
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 9);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 10);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 11);
 									Stack.PushA();
 
-									Cpu.CopyZeroPageToX(ArgumentPointer);
+									Cpu.CopyZeroPageToX(FramePointer);
 									Cpu.CopyAbsolutePlusXToA(Stack.Address + 2 + (assemblyMethod.Parameters.Count * 4) - 12);
 									Stack.PushA();
 									break;
@@ -624,6 +639,12 @@ namespace ILCompiler
 
 			writer2.Write(Compiler.Stream.ToArray());
 			writer2.Flush();
+
+			writer2.Close();
+			stream2.Close();
+
+			File.WriteAllLines(Arguments.Destination + ".labels.txt", Compiler.Labels
+				.Select(x => $"{Compiler.BaseAddress + x.Value:X4}\t{x.Key}"));
 		}
 
 		//private static int VariableSize(Mono.Cecil.Cil.VariableDefinition variable)

@@ -29,12 +29,12 @@ namespace ILCompiler.Library.C64
 		internal static void Parse()
 		{
 			var stringPointer = 0x02;
-			var value = 0x04;
-			var digitValuePointer = 0x08;
-			var digitValue = 0x0a;
-			var digit = 0x0e;
+			var value = 0x06;
+			var digitValuePointer = 0x0a;
+			var digitValue = 0x0e;
+			var digit = 0x12;
 
-			Stack.PullZeroPage16(stringPointer);
+			Stack.PullZeroPage32(stringPointer);
 
 			Cpu.A = 0;
 
@@ -208,14 +208,7 @@ namespace ILCompiler.Library.C64
 			Cpu.AddZeroPagePlusCarryToA(0x09);
 			Cpu.CopyAToZeroPage(0x05);
 
-			Cpu.CopyZeroPageToA(0x05);
-			Stack.PushA();
-			Cpu.CopyZeroPageToA(0x04);
-			Stack.PushA();
-			Cpu.CopyZeroPageToA(0x03);
-			Stack.PushA();
-			Cpu.CopyZeroPageToA(0x02);
-			Stack.PushA();
+			Stack.PushZeroPage32(0x02);
 
 			Cpu.Return();
 		}

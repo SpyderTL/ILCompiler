@@ -7,11 +7,19 @@ namespace HelloWorld
 	{
 		unsafe static void Main()
 		{
-			for (int i = 0; i < 25 * 40; i++)
+			while (true)
 			{
-				*(char*)(0x400 + i) = (char)24;
+				Vic.BorderColor = Vic.Color.Red;
 			}
 		}
+
+		//unsafe static void Main()
+		//{
+		//	for (int i = 0; i < 25 * 40; i++)
+		//	{
+		//		*(char*)(0x400 + i) = (char)24;
+		//	}
+		//}
 
 		//unsafe static void Main()
 		//{
@@ -108,16 +116,19 @@ namespace HelloWorld
 
 		//static void Main()
 		//{
-
 		//	while (true)
 		//	{
-		//		Console.WriteLine("Hello, World!");
-
 		//		var x = int.Parse(Console.ReadLine());
 		//		var y = int.Parse(Console.ReadLine());
 
-		//		Console.WriteLine(x + y);
+		//		var total = x + y;
+		//		Console.WriteLine(total);
 		//	}
+		//}
+
+		//static void Main()
+		//{
+		//	Console.WriteLine("Hello, World!");
 		//}
 
 		//static void Main()
