@@ -75,10 +75,10 @@ namespace ILCompiler
 						// Label Method
 						Compiler.Label(name);
 
-						// Save Old Argument Pointer
+						// Save Old Frame Pointer
 						Stack.PushZeroPage16(FramePointer);
 
-						// Set New Argument Pointer
+						// Set New Frame Pointer
 						Cpu.CopyAbsoluteToA(Stack.Pointer);
 						Cpu.CopyAToZeroPage(FramePointer);
 
@@ -348,17 +348,24 @@ namespace ILCompiler
 										Cpu.CopyXToStackPointer();
 									}
 
+									// Save Return Value
+									if (assemblyMethod.ReturnType.FullName != "System.Void")
+										Stack.PullZeroPage32(0x02);
+
 									// Restore Old Argument Pointer
 									Stack.PullZeroPage16(FramePointer);
 
-									// Restore Stack
-									var size = assemblyMethod.Parameters.Count * 4;
+									// Remove Parameters From Stack
+									if (assemblyMethod.Parameters.Any())
+									{
+										Cpu.CopyAbsoluteToA(Stack.Pointer);
+										Library.C64.Math.AddToA((byte)(assemblyMethod.Parameters.Count * 4));
+										Cpu.CopyAToAbsolute(Stack.Pointer);
+									}
 
+									// Restore Return Value
 									if (assemblyMethod.ReturnType.FullName != "System.Void")
-										size -= 4;
-
-									//if(size > 0)
-										// TODO: Need to remove parameters from stack, possibly.
+										Stack.PushZeroPage32(0x02);
 
 									Cpu.Return();
 									break;
