@@ -47,7 +47,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0x22
 		// 0x23
 		// 0x24
-		// 0x25
+		AndAWithImmediate8Address = 0x25,
 		// 0x26
 		// 0x27
 
@@ -204,7 +204,7 @@ namespace ILCompiler.Platform.Mos6502
 		CopyImmediate16AddressToX = 0xAE,
 		// 0xAF
 
-		// 0xB0
+		BranchToRelative8IfCarry = 0xB0,
 		CopyImmediate8PointerAddressPlusYToA = 0xB1,
 		// 0xB2
 		// 0xB3

@@ -465,18 +465,32 @@ namespace ILCompiler.Library.C64
 			Cpu.CopyZeroPageToA(0x05);
 			Cpu.CompareAToZeroPage(0x09);
 			Cpu.IfLess("Clt_True");
+			Cpu.IfNotEqual("Clt_False");
 
 			Cpu.CopyZeroPageToA(0x04);
 			Cpu.CompareAToZeroPage(0x08);
 			Cpu.IfLess("Clt_True");
+			Cpu.IfNotEqual("Clt_False");
 
 			Cpu.CopyZeroPageToA(0x03);
 			Cpu.CompareAToZeroPage(0x07);
 			Cpu.IfLess("Clt_True");
+			Cpu.IfNotEqual("Clt_False");
 
 			Cpu.CopyZeroPageToA(0x02);
 			Cpu.CompareAToZeroPage(0x06);
-			Cpu.IfLess("Clt_True");
+			Cpu.IfGreaterOrEqual("Clt_False");
+
+			Compiler.Label("Clt_True");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+			Cpu.A = 1;
+			Stack.PushA();
+
+			Cpu.Return();
 
 			Compiler.Label("Clt_False");
 
@@ -487,14 +501,93 @@ namespace ILCompiler.Library.C64
 			Stack.PushA();
 
 			Cpu.Return();
+		}
 
-			Compiler.Label("Clt_True");
+		internal static void Cgt()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.CompareAToZeroPage(0x09);
+			Cpu.IfLess("Cgt_False");
+			Cpu.IfNotEqual("Cgt_True");
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.CompareAToZeroPage(0x08);
+			Cpu.IfLess("Cgt_False");
+			Cpu.IfNotEqual("Cgt_True");
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.CompareAToZeroPage(0x07);
+			Cpu.IfLess("Cgt_False");
+			Cpu.IfNotEqual("Cgt_True");
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.CompareAToZeroPage(0x06);
+			Cpu.IfLess("Cgt_False");
+			Cpu.IfEqual("Cgt_False");
+
+			Compiler.Label("Cgt_True");
 
 			Cpu.A = 0;
 			Stack.PushA();
 			Stack.PushA();
 			Stack.PushA();
 			Cpu.A = 1;
+			Stack.PushA();
+
+			Cpu.Return();
+
+			Compiler.Label("Cgt_False");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+
+			Cpu.Return();
+		}
+
+		internal static void Ceq()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.CompareAToZeroPage(0x09);
+			Cpu.IfNotEqual("Ceq_False");
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.CompareAToZeroPage(0x08);
+			Cpu.IfNotEqual("Ceq_False");
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.CompareAToZeroPage(0x07);
+			Cpu.IfNotEqual("Ceq_False");
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.CompareAToZeroPage(0x06);
+			Cpu.IfNotEqual("Ceq_False");
+
+			Compiler.Label("Ceq_True");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
+			Cpu.A = 1;
+			Stack.PushA();
+
+			Cpu.Return();
+
+			Compiler.Label("Ceq_False");
+
+			Cpu.A = 0;
+			Stack.PushA();
+			Stack.PushA();
+			Stack.PushA();
 			Stack.PushA();
 
 			Cpu.Return();

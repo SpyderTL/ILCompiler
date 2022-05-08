@@ -7,16 +7,29 @@ namespace HelloWorld
 	{
 		static unsafe void Main()
 		{
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyLow) = 0x00;
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyHigh) = 0x10;
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelAttackDecay) = 0x00;
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelSustainRelease) = 0xfa;
+			Sid.FrequencyHigh0 = 0x10;
+			Sid.FrequencyLow0 = 0x00;
+			Sid.AttackDecay0 = 0x00;
+			Sid.SustainRelease0 = 0x0a;
 
-			*(byte*)(Io.SidBaseAddress + Io.SidVolume) = 0x0f;
+			Sid.Volume = Sid.MaxVolume;
 
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x81;
-			*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x80;
+			Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Enable;
+			Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Disable;
 		}
+
+		//static unsafe void Main()
+		//{
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyLow) = 0x00;
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelFrequencyHigh) = 0x10;
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelAttackDecay) = 0x00;
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelSustainRelease) = 0x0a;
+
+		//	*(byte*)(Io.SidBaseAddress + Io.SidVolume) = 0x0f;
+
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x81;
+		//	*(byte*)(Io.SidBaseAddress + Io.SidChannel0 + Io.SidChannelControl) = 0x80;
+		//}
 
 		//unsafe static void Main()
 		//{
@@ -139,11 +152,9 @@ namespace HelloWorld
 		//{
 		//	var x = 0;
 
-		//	while (true)
+		//	while (x <= 1000)
 		//	{
-		//		Console.WriteLine(x);
-
-		//		x++;
+		//		Console.WriteLine(x++);
 		//	}
 		//}
 

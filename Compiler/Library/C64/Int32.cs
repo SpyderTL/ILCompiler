@@ -499,5 +499,65 @@ namespace ILCompiler.Library.C64
 
 			Cpu.Return();
 		}
+
+		internal static void And()
+		{
+			var value1 = 0x02;
+			var value2 = 0x06;
+			var result = 0x0a;
+
+			Stack.PullZeroPage32(value2);
+			Stack.PullZeroPage32(value1);
+
+			Cpu.CopyZeroPageToA(value1 + 0);
+			Cpu.AndAWithZeroPage(value2 + 0);
+			Cpu.CopyAToZeroPage(result + 0);
+
+			Cpu.CopyZeroPageToA(value1 + 1);
+			Cpu.AndAWithZeroPage(value2 + 1);
+			Cpu.CopyAToZeroPage(result + 1);
+
+			Cpu.CopyZeroPageToA(value1 + 2);
+			Cpu.AndAWithZeroPage(value2 + 2);
+			Cpu.CopyAToZeroPage(result + 2);
+
+			Cpu.CopyZeroPageToA(value1 + 3);
+			Cpu.AndAWithZeroPage(value2 + 3);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			Stack.PushZeroPage32(result);
+
+			Cpu.Return();
+		}
+
+		internal static void Or()
+		{
+			var value1 = 0x02;
+			var value2 = 0x06;
+			var result = 0x0a;
+
+			Stack.PullZeroPage32(value2);
+			Stack.PullZeroPage32(value1);
+
+			Cpu.CopyZeroPageToA(value1 + 0);
+			Cpu.OrAWithZeroPage(value2 + 0);
+			Cpu.CopyAToZeroPage(result + 0);
+
+			Cpu.CopyZeroPageToA(value1 + 1);
+			Cpu.OrAWithZeroPage(value2 + 1);
+			Cpu.CopyAToZeroPage(result + 1);
+
+			Cpu.CopyZeroPageToA(value1 + 2);
+			Cpu.OrAWithZeroPage(value2 + 2);
+			Cpu.CopyAToZeroPage(result + 2);
+
+			Cpu.CopyZeroPageToA(value1 + 3);
+			Cpu.OrAWithZeroPage(value2 + 3);
+			Cpu.CopyAToZeroPage(result + 3);
+
+			Stack.PushZeroPage32(result);
+
+			Cpu.Return();
+		}
 	}
 }

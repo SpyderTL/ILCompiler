@@ -320,6 +320,14 @@ namespace ILCompiler
 									Cpu.Call("System.Int32 System.Int32::Modulus(System.Int32,System.Int32)");
 									break;
 
+								case Mono.Cecil.Cil.Code.And:
+									Cpu.Call("System.Int32 System.Int32::And(System.Int32,System.Int32)");
+									break;
+
+								case Mono.Cecil.Cil.Code.Or:
+									Cpu.Call("System.Int32 System.Int32::Or(System.Int32,System.Int32)");
+									break;
+
 								case Mono.Cecil.Cil.Code.Conv_U1:
 									break;
 
@@ -408,8 +416,16 @@ namespace ILCompiler
 									Cpu.CopyAToZeroPagePointerPlusY(0x06);
 									break;
 
+								case Mono.Cecil.Cil.Code.Ceq:
+									Cpu.Call("Ceq");
+									break;
+
 								case Mono.Cecil.Cil.Code.Clt:
 									Cpu.Call("Clt");
+									break;
+
+								case Mono.Cecil.Cil.Code.Cgt:
+									Cpu.Call("Cgt");
 									break;
 
 								case Mono.Cecil.Cil.Code.Brtrue:
@@ -420,27 +436,27 @@ namespace ILCompiler
 
 									Cpu.CompareAToZeroPage(0x02);
 
-									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x03);
 
-									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x04);
 
-									Cpu.IfNotEqual("NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x05);
 
-									Cpu.IfEqual("True_" + instruction.Offset);
+									Cpu.IfEqual(name + ":True_" + instruction.Offset);
 
-									Compiler.Label("NotTrue_" + instruction.Offset);
+									Compiler.Label(name + ":NotTrue_" + instruction.Offset);
 
 									target = instruction.Operand as Mono.Cecil.Cil.Instruction;
 
 									Cpu.Jump(name + "::" + target.Offset);
 
-									Compiler.Label("True_" + instruction.Offset);
+									Compiler.Label(name + ":True_" + instruction.Offset);
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldarg_0:
@@ -557,6 +573,14 @@ namespace ILCompiler
 								Library.C64.Cil.Clt();
 								break;
 
+							case "Cgt":
+								Library.C64.Cil.Cgt();
+								break;
+
+							case "Ceq":
+								Library.C64.Cil.Ceq();
+								break;
+
 							case "System.Void System.Console::Write(System.String)":
 								Library.C64.Console.WriteString();
 								break;
@@ -599,6 +623,14 @@ namespace ILCompiler
 
 							case "System.Int32 System.Int32::Modulus(System.Int32,System.Int32)":
 								Library.C64.Int32.Modulus();
+								break;
+
+							case "System.Int32 System.Int32::And(System.Int32,System.Int32)":
+								Library.C64.Int32.And();
+								break;
+
+							case "System.Int32 System.Int32::Or(System.Int32,System.Int32)":
+								Library.C64.Int32.Or();
 								break;
 
 							case "System.String System.String::Concat(System.String,System.String)":
