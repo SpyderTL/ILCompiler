@@ -592,5 +592,69 @@ namespace ILCompiler.Library.C64
 
 			Cpu.Return();
 		}
+
+		internal static void Shr()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Compiler.Label("Shr_Loop");
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.ShiftARight();
+			Cpu.CopyAToZeroPage(0x05);
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.RollARight();
+			Cpu.CopyAToZeroPage(0x04);
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.RollARight();
+			Cpu.CopyAToZeroPage(0x03);
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.RollARight();
+			Cpu.CopyAToZeroPage(0x02);
+
+			Cpu.DecrementZeroPage(0x06);
+
+			Cpu.IfNotZero("Shr_Loop");
+
+			Stack.PushZeroPage32(0x02);
+
+			Cpu.Return();
+		}
+
+		internal static void Shl()
+		{
+			Stack.PullZeroPage32(0x06);
+			Stack.PullZeroPage32(0x02);
+
+			Compiler.Label("Shl_Loop");
+
+			Cpu.CopyZeroPageToA(0x02);
+			Cpu.ShiftALeft();
+			Cpu.CopyAToZeroPage(0x02);
+
+			Cpu.CopyZeroPageToA(0x03);
+			Cpu.RollALeft();
+			Cpu.CopyAToZeroPage(0x03);
+
+			Cpu.CopyZeroPageToA(0x04);
+			Cpu.RollALeft();
+			Cpu.CopyAToZeroPage(0x04);
+
+			Cpu.CopyZeroPageToA(0x05);
+			Cpu.RollALeft();
+			Cpu.CopyAToZeroPage(0x05);
+
+			Cpu.DecrementZeroPage(0x06);
+
+			Cpu.IfNotZero("Shl_Loop");
+
+			Stack.PushZeroPage32(0x02);
+
+			Cpu.Return();
+		}
 	}
 }

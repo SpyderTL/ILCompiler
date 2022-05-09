@@ -53,7 +53,7 @@ namespace ILCompiler.Platform.Mos6502
 
 		// 0x28
 		// 0x29
-		// 0x2A
+		RollALeft = 0x2A,
 		// 0x2B
 		// 0x2C
 		// 0x2D
@@ -89,7 +89,7 @@ namespace ILCompiler.Platform.Mos6502
 
 		PushAToStack = 0x48,
 		// 0x49
-		// 0x4A
+		ShiftARight = 0x4A,
 		// 0x4B
 		JumpToImmediate16 = 0x4C,
 		// 0x4D
@@ -125,7 +125,7 @@ namespace ILCompiler.Platform.Mos6502
 
 		PullAFromStack = 0x68,
 		AddImmediate8PlusCarryToA = 0x69,
-		// 0x6A
+		RollARight = 0x6A,
 		// 0x6B
 		// 0x6C
 		AddImmediate16AddressPlusCarryToA = 0x6D,

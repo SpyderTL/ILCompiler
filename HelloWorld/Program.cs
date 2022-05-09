@@ -7,16 +7,81 @@ namespace HelloWorld
 	{
 		static unsafe void Main()
 		{
-			Sid.FrequencyHigh0 = 0x10;
-			Sid.FrequencyLow0 = 0x00;
-			Sid.AttackDecay0 = 0x00;
-			Sid.SustainRelease0 = 0x0a;
+			*(byte*)(RRNet.BaseAddress + RRNet.TransmitCommandLow) = 0xC0;
+			*(byte*)(RRNet.BaseAddress + RRNet.TransmitCommandHigh) = 0x00;
+			*(byte*)(RRNet.BaseAddress + RRNet.TransmitLengthLow) = 0x51;
+			*(byte*)(RRNet.BaseAddress + RRNet.TransmitLengthHigh) = 0x00;
 
-			Sid.Volume = Sid.MaxVolume;
+			*(byte*)(RRNet.BaseAddress + RRNet.PacketPagePointerLow) = 0x38;
+			*(byte*)(RRNet.BaseAddress + RRNet.PacketPagePointerHigh) = 0x01;
 
-			Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Enable;
-			Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Disable;
+			var ready = *(byte*)(RRNet.BaseAddress + RRNet.PacketPageData0Low);
+			var ready2 = *(byte*)(RRNet.BaseAddress + RRNet.PacketPageData0High);
+
+			Console.WriteLine(ready);
+			Console.WriteLine(ready2);
 		}
+
+		//static void Main()
+		//{
+		//	var value = 1;
+
+		//	while (true)
+		//	{
+		//		Console.WriteLine(value);
+
+		//		value <<= 1;
+		//	}
+		//}
+
+		//static unsafe void Main()
+		//{
+		//	Cia.ClockHours = 0;
+		//	Cia.ClockMinutes = 0;
+		//	Cia.ClockSeconds = 0;
+		//	Cia.ClockTenths = 0;
+
+		//	while (true)
+		//	{
+		//		var hours = Cia.ClockHours;
+		//		var minutes = Cia.ClockMinutes;
+		//		var seconds = Cia.ClockSeconds;
+		//		var tenths = Cia.ClockTenths;
+
+		//		var secondsLow = seconds & 0x0f;
+		//		var secondsHigh = seconds >> 4;
+
+		//		var minutesLow = minutes & 0x0f;
+		//		var minutesHigh = minutes >> 4;
+
+		//		var hoursLow = hours & 0x0f;
+		//		var hoursHigh = hours >> 4;
+
+		//		Console.Write(hoursHigh);
+		//		Console.Write(hoursLow);
+		//		Console.Write(":");
+		//		Console.Write(minutesHigh);
+		//		Console.Write(minutesLow);
+		//		Console.Write(":");
+		//		Console.Write(secondsHigh);
+		//		Console.Write(secondsLow);
+		//		Console.Write(".");
+		//		Console.WriteLine(tenths);
+		//	}
+		//}
+
+		//static void Main()
+		//{
+		//	Sid.FrequencyHigh0 = 0x10;
+		//	Sid.FrequencyLow0 = 0x00;
+		//	Sid.AttackDecay0 = 0x00;
+		//	Sid.SustainRelease0 = 0x0a;
+
+		//	Sid.Volume = Sid.MaxVolume;
+
+		//	Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Enable;
+		//	Sid.Control0 = Sid.Waveform.Noise | Sid.Control.Disable;
+		//}
 
 		//static unsafe void Main()
 		//{
@@ -48,6 +113,14 @@ namespace HelloWorld
 		//	while (true)
 		//	{
 		//		Console.WriteLine(value++);
+		//	}
+		//}
+
+		//static void Main()
+		//{
+		//	while (true)
+		//	{
+		//		Vic.BackgroundColor0++;
 		//	}
 		//}
 

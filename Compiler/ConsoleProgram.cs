@@ -328,6 +328,14 @@ namespace ILCompiler
 									Cpu.Call("System.Int32 System.Int32::Or(System.Int32,System.Int32)");
 									break;
 
+								case Mono.Cecil.Cil.Code.Shr:
+									Cpu.Call("Shr");
+									break;
+
+								case Mono.Cecil.Cil.Code.Shl:
+									Cpu.Call("Shl");
+									break;
+
 								case Mono.Cecil.Cil.Code.Conv_U1:
 									break;
 
@@ -337,6 +345,7 @@ namespace ILCompiler
 									Stack.PushZeroPage32(0x02);
 									break;
 
+								case Mono.Cecil.Cil.Code.Br:
 								case Mono.Cecil.Cil.Code.Br_S:
 									var target = instruction.Operand as Mono.Cecil.Cil.Instruction;
 
@@ -579,6 +588,14 @@ namespace ILCompiler
 
 							case "Ceq":
 								Library.C64.Cil.Ceq();
+								break;
+
+							case "Shr":
+								Library.C64.Cil.Shr();
+								break;
+
+							case "Shl":
+								Library.C64.Cil.Shl();
 								break;
 
 							case "System.Void System.Console::Write(System.String)":

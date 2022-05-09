@@ -14,6 +14,18 @@
 			}
 		}
 
+		unsafe public static byte BackgroundColor0
+		{
+			set
+			{
+				*(byte*)Io.VicBackgroundColor0 = value;
+			}
+			get
+			{
+				return *(byte*)Io.VicBackgroundColor0;
+			}
+		}
+
 		public static class Color
 		{
 			public const byte Black = 0;

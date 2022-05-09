@@ -321,6 +321,21 @@ namespace ILCompiler.Platform.C64
 			Compiler.Writer.Write((byte)OpCodes.ShiftALeft);
 		}
 
+		internal static void RollALeft()
+		{
+			Compiler.Writer.Write((byte)OpCodes.RollALeft);
+		}
+
+		internal static void ShiftARight()
+		{
+			Compiler.Writer.Write((byte)OpCodes.ShiftARight);
+		}
+
+		internal static void RollARight()
+		{
+			Compiler.Writer.Write((byte)OpCodes.RollARight);
+		}
+
 		internal static void AddZeroPagePlusCarryToA(int zeroPage)
 		{
 			Compiler.Writer.Write((byte)OpCodes.AddImmediate8AddressPlusCarryToA);
