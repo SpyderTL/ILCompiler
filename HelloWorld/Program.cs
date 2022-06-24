@@ -3,24 +3,537 @@ using Platform.C64;
 
 namespace HelloWorld
 {
-	class Program
+	static class Program
 	{
-		static unsafe void Main()
+		static int Test = int.MaxValue;
+
+		static void Main()
 		{
-			*(byte*)(RRNet.BaseAddress + RRNet.TransmitCommandLow) = 0xC0;
-			*(byte*)(RRNet.BaseAddress + RRNet.TransmitCommandHigh) = 0x00;
-			*(byte*)(RRNet.BaseAddress + RRNet.TransmitLengthLow) = 0x51;
-			*(byte*)(RRNet.BaseAddress + RRNet.TransmitLengthHigh) = 0x00;
-
-			*(byte*)(RRNet.BaseAddress + RRNet.PacketPagePointerLow) = 0x38;
-			*(byte*)(RRNet.BaseAddress + RRNet.PacketPagePointerHigh) = 0x01;
-
-			var ready = *(byte*)(RRNet.BaseAddress + RRNet.PacketPageData0Low);
-			var ready2 = *(byte*)(RRNet.BaseAddress + RRNet.PacketPageData0High);
-
-			Console.WriteLine(ready);
-			Console.WriteLine(ready2);
+			while (true)
+			{
+				Console.WriteLine(Test--);
+			}
 		}
+
+		//static void Main()
+		//{
+		//	Console.WriteLine("Waiting For Buffer");
+
+		//	while (true)
+		//	{
+		//		RRNet.TransmitCommandLow = 0xC0;
+		//		RRNet.TransmitCommandHigh = 0x00;
+
+		//		RRNet.TransmitLengthLow = 0x1A;
+		//		RRNet.TransmitLengthHigh = 0x01;
+
+		//		RRNet.PacketPagePointerLow = 0x38;
+		//		RRNet.PacketPagePointerHigh = 0x01;
+
+		//		var statusLow = RRNet.PacketPageData0Low;
+		//		var statusHigh = RRNet.PacketPageData0High;
+
+		//		if ((statusHigh & 0x01) != 0)
+		//			break;
+		//	}
+
+		//	Console.WriteLine("Sending Packet");
+
+		//	// Ethernet Header
+
+		//	// Destination Physical Address (FF:FF:FF:FF:FF:FF, Broadcast)
+		//	RRNet.DataPort0Low = 0xFF;
+		//	RRNet.DataPort0High = 0xFF;
+
+		//	RRNet.DataPort0Low = 0xFF;
+		//	RRNet.DataPort0High = 0xFF;
+
+		//	RRNet.DataPort0Low = 0xFF;
+		//	RRNet.DataPort0High = 0xFF;
+
+		//	// Source Physical Address (28:CD:4C:FF:[high]:[low])
+		//	var physicalAddressHigh = RRNet.PhysicalAddressHigh;
+		//	var physicalAddressLow = RRNet.PhysicalAddressLow;
+
+		//	RRNet.DataPort0Low = 0x28;
+		//	RRNet.DataPort0High = 0xCD;
+
+		//	RRNet.DataPort0Low = 0x4C;
+		//	RRNet.DataPort0High = 0xFF;
+
+		//	RRNet.DataPort0Low = physicalAddressHigh;
+		//	RRNet.DataPort0High = physicalAddressLow;
+
+		//	// Ethernet Packet Type (0x0800, IPv4)
+		//	RRNet.DataPort0Low = 0x08;
+		//	RRNet.DataPort0High = 0x00;
+
+
+		//	// IPv4 Packet Header
+
+		//	// Version/Header Length (0x45)
+		//	RRNet.DataPort0Low = 0x45;
+
+		//	// Code Point/Congestion (0x00)
+		//	RRNet.DataPort0High = 0x00;
+
+		//	// Total Length (0x010C)
+		//	RRNet.DataPort0Low = 0x01;
+		//	RRNet.DataPort0High = 0x0C;
+
+		//	// Unique ID
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	// Flags
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	// Time To Live (8)
+		//	RRNet.DataPort0Low = 0x08;
+
+		//	// Protocol (17, UDP)
+		//	RRNet.DataPort0High = 0x11;
+
+		//	// Header Checksum (0x????)
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	// Source Internet Address (0.0.0.0)
+		//	RRNet.DataPort0Low = 0;
+		//	RRNet.DataPort0High = 0;
+		//	RRNet.DataPort0Low = 0;
+		//	RRNet.DataPort0High = 0;
+
+		//	// Destination Internet Address (255.255.255.255, Broadcast)
+		//	RRNet.DataPort0Low = 255;
+		//	RRNet.DataPort0High = 255;
+		//	RRNet.DataPort0Low = 255;
+		//	RRNet.DataPort0High = 255;
+
+
+		//	// UDP Header
+
+		//	// Source Port (68)
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x44;
+
+		//	// Destination Port (67)
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x43;
+
+		//	// Length (0x00F8)
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0xF8;
+
+		//	// Checksum (0x????)
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+
+		//	// DHCP Packet
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	RRNet.DataPort0Low = 0x00;
+		//	RRNet.DataPort0High = 0x00;
+
+		//	Console.WriteLine("Waiting For Packet");
+
+		//	while (true)
+		//	{
+		//		RRNet.PacketPagePointerLow = 0x24;
+		//		RRNet.PacketPagePointerHigh = 0x01;
+
+		//		var statusLow = RRNet.PacketPageData0Low;
+		//		var statusHigh = RRNet.PacketPageData0High;
+
+		//		if ((statusHigh & 0x01) != 0)
+		//			break;
+		//	}
+
+		//	Console.WriteLine("Packet Recieved");
+		//}
+
+		//static unsafe void Main()
+		//{
+		//	var high = RRNet.PhysicalAddressHigh;
+		//	var low = RRNet.PhysicalAddressLow;
+
+		//	Console.WriteLine(high);
+		//	Console.WriteLine(low);
+		//}
+
+		//static unsafe void Main()
+		//{
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.TransmitCommandLow) = 0xC0;
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.TransmitCommandHigh) = 0x00;
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.TransmitLengthLow) = 0x51;
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.TransmitLengthHigh) = 0x00;
+
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.PacketPagePointerLow) = 0x38;
+		//	*(byte*)(RRNet.Io.BaseAddress + RRNet.Io.PacketPagePointerHigh) = 0x01;
+
+		//	var ready = *(byte*)(RRNet.Io.BaseAddress + RRNet.Io.PacketPageData0Low);
+		//	var ready2 = *(byte*)(RRNet.Io.BaseAddress + RRNet.Io.PacketPageData0High);
+
+		//	Console.WriteLine(ready);
+		//	Console.WriteLine(ready2);
+		//}
 
 		//static void Main()
 		//{

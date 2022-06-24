@@ -214,7 +214,7 @@ namespace ILCompiler.Platform.Mos6502
 		// 0xB7
 
 		// 0xB8
-		// 0xB9
+		CopyImmediate16PlusYAddressToA = 0xB9,
 		CopyStackPointerToX = 0xBA,
 		// 0xBB
 		// 0xBC

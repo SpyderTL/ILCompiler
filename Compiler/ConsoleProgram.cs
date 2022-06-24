@@ -58,9 +58,13 @@ namespace ILCompiler
 				}
 			}
 
-			var assemblyMethods = assemblies.SelectMany(x => x.Modules).SelectMany(x => x.Types).SelectMany(x => x.Methods).ToDictionary(x => x.FullName);
+			var assemblyTypes = assemblies.SelectMany(x => x.Modules).SelectMany(x => x.Types).ToArray();
+			var assemblyMethods = assemblyTypes.SelectMany(x => x.Methods).ToDictionary(x => x.FullName);
 
 			var methods = new List<string>();
+
+			foreach (var constructor in assemblyTypes.SelectMany(x => x.Methods).Where(x => x.IsConstructor && x.IsStatic))
+				Cpu.Call(constructor.FullName);
 
 			while (methods.Count < Compiler.Imports.Count)
 			{
@@ -434,6 +438,7 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Cgt:
+								case Mono.Cecil.Cil.Code.Cgt_Un:
 									Cpu.Call("Cgt");
 									break;
 
@@ -445,27 +450,56 @@ namespace ILCompiler
 
 									Cpu.CompareAToZeroPage(0x02);
 
-									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":True_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x03);
 
-									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":True_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x04);
 
-									Cpu.IfNotEqual(name + ":NotTrue_" + instruction.Offset);
+									Cpu.IfNotEqual(name + ":True_" + instruction.Offset);
 
 									Cpu.CompareAToZeroPage(0x05);
 
-									Cpu.IfEqual(name + ":True_" + instruction.Offset);
+									Cpu.IfEqual(name + ":NotTrue_" + instruction.Offset);
 
-									Compiler.Label(name + ":NotTrue_" + instruction.Offset);
+									Compiler.Label(name + ":True_" + instruction.Offset);
 
 									target = instruction.Operand as Mono.Cecil.Cil.Instruction;
 
 									Cpu.Jump(name + "::" + target.Offset);
 
-									Compiler.Label(name + ":True_" + instruction.Offset);
+									Compiler.Label(name + ":NotTrue_" + instruction.Offset);
+									break;
+
+								case Mono.Cecil.Cil.Code.Brfalse:
+								case Mono.Cecil.Cil.Code.Brfalse_S:
+									Stack.PullZeroPage32(0x02);
+
+									Cpu.A = 0;
+
+									Cpu.CompareAToZeroPage(0x02);
+
+									Cpu.IfNotEqual(name + ":NotFalse_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x03);
+
+									Cpu.IfNotEqual(name + ":NotFalse_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x04);
+
+									Cpu.IfNotEqual(name + ":NotFalse_" + instruction.Offset);
+
+									Cpu.CompareAToZeroPage(0x05);
+
+									Cpu.IfNotEqual(name + ":NotFalse_" + instruction.Offset);
+
+									target = instruction.Operand as Mono.Cecil.Cil.Instruction;
+
+									Cpu.Jump(name + "::" + target.Offset);
+
+									Compiler.Label(name + ":NotFalse_" + instruction.Offset);
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldarg_0:
@@ -523,7 +557,68 @@ namespace ILCompiler
 									break;
 
 								case Mono.Cecil.Cil.Code.Ldsfld:
-									throw new Exception("Static fields not supported.");
+									var fieldDefinition = (FieldDefinition)instruction.Operand;
+
+									Cpu.Y = 3;
+
+									Compiler.Writer.Write((byte)OpCodes.CopyImmediate16PlusYAddressToA);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Stack.PushA();
+
+									Cpu.DecrementY();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyImmediate16PlusYAddressToA);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Stack.PushA();
+
+									Cpu.DecrementY();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyImmediate16PlusYAddressToA);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Stack.PushA();
+
+									Cpu.DecrementY();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyImmediate16PlusYAddressToA);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Stack.PushA();
+									break;
+
+								case Mono.Cecil.Cil.Code.Stsfld:
+									fieldDefinition = (FieldDefinition)instruction.Operand;
+
+									Cpu.Y = 0;
+
+									Stack.PullA();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16PlusYAddress);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Cpu.IncrementY();
+
+									Stack.PullA();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16PlusYAddress);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Cpu.IncrementY();
+
+									Stack.PullA();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16PlusYAddress);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+
+									Cpu.IncrementY();
+
+									Stack.PullA();
+
+									Compiler.Writer.Write((byte)OpCodes.CopyAToImmediate16PlusYAddress);
+									Compiler.AbsoluteReference(fieldDefinition.FullName);
+									break;
 
 								default:
 									throw new Exception("Unsupported OpCode: " + instruction.OpCode.Code);
@@ -661,6 +756,26 @@ namespace ILCompiler
 							default:
 								throw new Exception("Method Not Found: " + name);
 						}
+					}
+				}
+			}
+
+			// Static Fields
+			foreach (var type in assemblyTypes)
+			{
+				foreach (var field in type.Fields.Where(x => x.IsStatic))
+				{
+					Compiler.Label(field.FullName);
+
+					switch (field.FieldType.FullName)
+					{
+						case "System.Int32":
+						case "System.Uint32":
+							Compiler.Writer.Write(0);
+							break;
+
+						default:
+							throw new Exception("Static field type not supported: " + field.FieldType.FullName);
 					}
 				}
 			}
